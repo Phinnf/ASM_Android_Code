@@ -9,18 +9,79 @@
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="29dp"
+        android:layout_marginBottom="16dp"
         android:text="Welcome!"
         android:textSize="22sp"
-        android:textStyle="bold"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnGoToBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="8dp"
+        android:text="Budget"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/layoutSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/tvWelcome"
+        android:padding="10dp"
+        android:background="#EFEFEF"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tvCurrentMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Overview October 2025"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvTotalSpending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Spending: 0đ"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_red_dark"/>
+
+        <TextView
+            android:id="@+id/tvTotalBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Budget: 0đ"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_blue_dark"/>
+
+        <TextView
+            android:id="@+id/tvRemainingBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remaining: 0đ"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_green_dark"/>
+    </LinearLayout>
+    <!-- END SUMMARY AREA -->
+    <!-- Changed layout_below -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExpenses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tvWelcome"/>
+        android:layout_below="@id/layoutSummary"
+        android:layout_marginTop="8dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddExpense"

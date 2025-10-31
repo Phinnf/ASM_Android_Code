@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.Calendar;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -24,6 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_EXPENSE_AMOUNT = "AMOUNT";
     public static final String COL_EXPENSE_CATEGORY = "CATEGORY";
     public static final String COL_EXPENSE_DATE = "DATE"; // Format: "YYYY-MM-DD"
+    // Budgets Table
+    public static final String TABLE_BUDGETS = "budgets";
+    public static final String COL_BUDGET_ID = "ID";
+    public static final String COL_BUDGET_USER_ID = "USER_ID"; // Foreign Key
+    public static final String COL_BUDGET_CATEGORY = "CATEGORY";
+    public static final String COL_BUDGET_AMOUNT = "AMOUNT";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,12 +58,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL_EXPENSE_DATE + " TEXT, " +
                 "FOREIGN KEY(" + COL_EXPENSE_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COL_USER_ID + "))";
         db.execSQL(createExpensesTable);
+        // Create Budgets table
+        String createBudgetsTable = "CREATE TABLE " + TABLE_BUDGETS + " (" +
+                COL_BUDGET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_BUDGET_USER_ID + " INTEGER, " +
+                COL_BUDGET_CATEGORY + " TEXT, " +
+                COL_BUDGET_AMOUNT + " REAL, " +
+                "FOREIGN KEY(" + COL_BUDGET_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COL_USER_ID + "), " +
+                // Ensure each user has only 1 budget per category
+                "UNIQUE (" + COL_BUDGET_USER_ID + ", " + COL_BUDGET_CATEGORY + "))";
+        db.execSQL(createBudgetsTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BUDGETS);
+        // ... (drop users and expenses tables)
         onCreate(db);
     }
 
@@ -143,6 +165,128 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete(TABLE_EXPENSES, COL_EXPENSE_ID + " = ?", new String[]{String.valueOf(expenseId)});
         return result > 0;
+    }
+    // --- Functions for Budgets Table ---
+
+    /**
+     * Set/Update a budget (UPSERT)
+     * If budget for this category exists -> Update
+     * If not -> Insert new
+     */
+    public boolean setBudget(int userId, String category, double amount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_BUDGET_USER_ID, userId);
+        cv.put(COL_BUDGET_CATEGORY, category);
+        cv.put(COL_BUDGET_AMOUNT, amount);
+
+        // Try updating first
+        int rowsAffected = db.update(TABLE_BUDGETS, cv,
+                COL_BUDGET_USER_ID + " = ? AND " + COL_BUDGET_CATEGORY + " = ?",
+                new String[]{String.valueOf(userId), category});
+
+        // If no rows were affected (meaning it doesn't exist), insert new
+        if (rowsAffected == 0) {
+            long result = db.insert(TABLE_BUDGETS, null, cv);
+            return result != -1;
+        }
+
+        return true; // Update successful
+    }
+    /**
+     * Get the budget for a specific category
+     * @return the budget amount, or 0 if not set
+     */
+    public double getBudget(int userId, String category) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COL_BUDGET_AMOUNT + " FROM " + TABLE_BUDGETS +
+                        " WHERE " + COL_BUDGET_USER_ID + " = ? AND " + COL_BUDGET_CATEGORY + " = ?",
+                new String[]{String.valueOf(userId), category});
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            double amount = cursor.getDouble(0);
+            cursor.close();
+            return amount;
+        } else {
+            cursor.close();
+            return 0; // Budget not set
+        }
+    }
+    // --- Functions for Overview Calculation ---
+
+    /**
+     * Get user's total spending FOR THE CURRENT MONTH
+     */
+    public double getTotalSpendingForCurrentMonth(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Get current month and year, format "YYYY-MM"
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.US);
+        String currentMonthYear = sdf.format(calendar.getTime()); // e.g., "2025-10"
+
+        // Query: Calculate SUM(AMOUNT) for the user,
+        // where DATE starts with "YYYY-MM"
+        String query = "SELECT SUM(" + COL_EXPENSE_AMOUNT + ") FROM " + TABLE_EXPENSES +
+                " WHERE " + COL_EXPENSE_USER_ID + " = ? AND " +
+                " strftime('%Y-%m', " + COL_EXPENSE_DATE + ") = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), currentMonthYear});
+
+        if (cursor.moveToFirst()) {
+            double total = cursor.getDouble(0);
+            cursor.close();
+            return total;
+        } else {
+            cursor.close();
+            return 0;
+        }
+    }
+    /**
+     * Get user's total budget (for all categories)
+     */
+    public double getTotalBudget(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT SUM(" + COL_BUDGET_AMOUNT + ") FROM " + TABLE_BUDGETS +
+                " WHERE " + COL_BUDGET_USER_ID + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            double total = cursor.getDouble(0);
+            cursor.close();
+            return total;
+        } else {
+            cursor.close();
+            return 0;
+        }
+    }
+    /**
+     * (Advanced for Breakdown)
+     * Get total spending for 1 category, IN THE CURRENT MONTH
+     */
+    public double getTotalSpendingForCategory(int userId, String category) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.US);
+        String currentMonthYear = sdf.format(calendar.getTime());
+
+        String query = "SELECT SUM(" + COL_EXPENSE_AMOUNT + ") FROM " + TABLE_EXPENSES +
+                " WHERE " + COL_EXPENSE_USER_ID + " = ? AND " +
+                COL_EXPENSE_CATEGORY + " = ? AND " +
+                " strftime('%Y-%m', " + COL_EXPENSE_DATE + ") = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), category, currentMonthYear});
+
+        if (cursor.moveToFirst()) {
+            double total = cursor.getDouble(0);
+            cursor.close();
+            return total;
+        } else {
+            cursor.close();
+            return 0;
+        }
     }
 
 }
