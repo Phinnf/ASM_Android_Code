@@ -32,11 +32,10 @@ public class DashboardActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        // Get User ID from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(LoginActivity.PREFS_NAME, MODE_PRIVATE);
-        currentUserId = prefs.getInt(LoginActivity.KEY_USER_ID, -1);
+        // Get User ID from Intent
+        currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
-            // If user ID is not found, finish the activity
+            // If user ID is not found, finish the activity (should not happen if launched correctly)
             finish();
             return;
         }

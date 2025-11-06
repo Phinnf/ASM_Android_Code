@@ -1,4 +1,5 @@
 package com.example.Assignment_Demo;
+
 // met cai github qua
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,8 +42,9 @@ public class LoginActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        if (sharedPreferences.getInt(KEY_USER_ID, -1) != -1) {
-            goToDashboard(-1);
+        int rememberedUserId = sharedPreferences.getInt(KEY_USER_ID, -1);
+        if (rememberedUserId != -1) {
+            goToDashboard(rememberedUserId);
         }
 
         tilEmailUsername = findViewById(R.id.til_email_username);
@@ -120,14 +122,15 @@ public class LoginActivity extends AppCompatActivity {
 
             if (userId != -1) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt(KEY_USER_ID, userId);
 
                 // Handle "Remember me" logic
                 if (cbRememberMe.isChecked()) {
+                    editor.putInt(KEY_USER_ID, userId);
                     editor.putString(KEY_REMEMBER_EMAIL, emailUsername);
                     editor.putString(KEY_REMEMBER_PASSWORD, password);
                     editor.putBoolean(KEY_REMEMBER_ME_CHECKED, true);
                 } else {
+                    editor.remove(KEY_USER_ID); // Explicitly remove USER_ID if not remembered
                     editor.remove(KEY_REMEMBER_EMAIL);
                     editor.remove(KEY_REMEMBER_PASSWORD);
                     editor.putBoolean(KEY_REMEMBER_ME_CHECKED, false);
