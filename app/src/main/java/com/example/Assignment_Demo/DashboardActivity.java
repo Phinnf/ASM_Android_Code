@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast; // Added for Toast message
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,9 +36,12 @@ public class DashboardActivity extends AppCompatActivity {
         // Get User ID from Intent
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
-            // If user ID is not found, finish the activity (should not happen if launched correctly)
+            Toast.makeText(this, "User ID not found in Intent, finishing activity.", Toast.LENGTH_LONG).show();
             finish();
             return;
+        } else {
+            // Added Toast to show the received User ID
+            Toast.makeText(this, "Dashboard received User ID: " + currentUserId, Toast.LENGTH_SHORT).show();
         }
 
         initializeViews();
