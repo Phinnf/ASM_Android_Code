@@ -22,7 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilEmailUsername, tilPassword;
     private TextInputEditText etEmailUsername, etPassword;
     private MaterialButton btnSignIn, btnSignInTab, btnSignUpTab;
-    private TextView tvForgotPassword;
     private CheckBox cbRememberMe;
 
     private DatabaseHelper dbHelper;
@@ -42,9 +41,15 @@ public class LoginActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
+        // --- (FIX 1) UPDATED AUTO-LOGIN CHECK ---
+        // Check if user *wanted* to be remembered
+        boolean rememberMe = sharedPreferences.getBoolean(KEY_REMEMBER_ME_CHECKED, false);
         int rememberedUserId = sharedPreferences.getInt(KEY_USER_ID, -1);
-        if (rememberedUserId != -1) {
+
+        if (rememberMe && rememberedUserId != -1) {
+            // User is remembered and has a valid ID, go to Dashboard
             goToDashboard(rememberedUserId);
+            return; // Skip the rest of onCreate (no need to show login)
         }
 
         tilEmailUsername = findViewById(R.id.til_email_username);
@@ -54,10 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btn_sign_in);
         btnSignInTab = findViewById(R.id.btn_sign_in_tab);
         btnSignUpTab = findViewById(R.id.btn_sign_up_tab);
-        tvForgotPassword = findViewById(R.id.tv_forgot_password);
         cbRememberMe = findViewById(R.id.cb_remember_me);
 
-        // Load remembered credentials
+        // Load remembered credentials (if they exist)
         boolean rememberMeChecked = sharedPreferences.getBoolean(KEY_REMEMBER_ME_CHECKED, false);
         cbRememberMe.setChecked(rememberMeChecked);
         if (rememberMeChecked) {
@@ -73,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
 
+        // Your tab styling logic (unchanged)
         btnSignInTab.setBackgroundTintList(getColorStateList(R.color.colorPrimary));
         btnSignInTab.setTextColor(getColorStateList(R.color.white));
         btnSignUpTab.setBackgroundTintList(getColorStateList(android.R.color.transparent));
@@ -123,19 +128,28 @@ public class LoginActivity extends AppCompatActivity {
             if (userId != -1) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                // Handle "Remember me" logic
+                // --- (FIX 2) CORRECTED "REMEMBER ME" LOGIC ---
+
+                // ALWAYS save the USER_ID.
+                // DashboardActivity and AddExpenseActivity need this
+                // to work for the CURRENT session.
+                editor.putInt(KEY_USER_ID, userId);
+
+                // Now, handle the "Remember me" logic for next time
                 if (cbRememberMe.isChecked()) {
-                    editor.putInt(KEY_USER_ID, userId);
+                    // Save credentials and the "remember me" flag for auto-login
                     editor.putString(KEY_REMEMBER_EMAIL, emailUsername);
                     editor.putString(KEY_REMEMBER_PASSWORD, password);
                     editor.putBoolean(KEY_REMEMBER_ME_CHECKED, true);
                 } else {
-                    editor.remove(KEY_USER_ID); // Explicitly remove USER_ID if not remembered
+                    // Clear credentials and the flag so the user is NOT auto-logged in
                     editor.remove(KEY_REMEMBER_EMAIL);
                     editor.remove(KEY_REMEMBER_PASSWORD);
                     editor.putBoolean(KEY_REMEMBER_ME_CHECKED, false);
                 }
                 editor.apply();
+
+                // --- END OF FIX 2 ---
 
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
                 goToDashboard(userId);
