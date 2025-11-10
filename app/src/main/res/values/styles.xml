@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RoundedProgressBar" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="trackThickness">30dp</item>
+        <item name="trackCornerRadius">20dp</item>
+        <item name="indicatorColor">#F85858</item>
+        <item name="trackColor">#7CFCB1</item>
+    </style>
+</resources>

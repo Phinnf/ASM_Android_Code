@@ -21,7 +21,7 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private ExpenseAdapter expenseAdapter;
 
-    private TextView tvWelcome, tvCurrentMonth, tvTotalSpending, tvTotalBudget, tvRemainingBudget;
+    private TextView tvHello, tvCurrentMonth, tvTotalSpending, tvTotalBudget, tvRemainingBudget;
     private RecyclerView rvExpenses;
     private FloatingActionButton fabAddExpense;
     private Button btnGoToBudget;
@@ -66,7 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvWelcome = findViewById(R.id.tvWelcome);
+        tvHello = findViewById(R.id.tvHello);
         rvExpenses = findViewById(R.id.rvExpenses);
         fabAddExpense = findViewById(R.id.fabAddExpense);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
@@ -75,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvTotalBudget = findViewById(R.id.tvTotalBudget);
         tvRemainingBudget = findViewById(R.id.tvRemainingBudget);
 
-        tvWelcome.setText("Expenses for User: " + currentUserId);
+        tvHello.setText("Expenses for User: " + currentUserId);
     }
 
     private void setupListeners() {
