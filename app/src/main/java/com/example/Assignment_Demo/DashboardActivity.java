@@ -75,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvTotalBudget = findViewById(R.id.tvTotalBudget);
         tvRemainingBudget = findViewById(R.id.tvRemainingBudget);
 
-        tvHello.setText("Expenses for User: " + currentUserId);
+        tvHello.setText("Hello, " + currentUserId);
     }
 
     private void setupListeners() {
@@ -106,9 +106,9 @@ public class DashboardActivity extends AppCompatActivity {
         double remaining = totalBudget - totalSpending;
 
         // Display totals
-        tvTotalSpending.setText(String.format(Locale.US, "Total Spending: %.0fđ", totalSpending));
-        tvTotalBudget.setText(String.format(Locale.US, "Total Budget: %.0fđ", totalBudget));
-        tvRemainingBudget.setText(String.format(Locale.US, "Remaining: %.0fđ", remaining));
+        tvTotalSpending.setText(String.format(Locale.US, "Expense: %.0f $", totalSpending));
+        tvTotalBudget.setText(String.format(Locale.US, "USD: %.0f $/Mo", totalBudget));
+        tvRemainingBudget.setText(String.format(Locale.US, "Remaining: %.0f $", remaining));
 
         // Change color if remaining is negative
         if (remaining < 0) {
