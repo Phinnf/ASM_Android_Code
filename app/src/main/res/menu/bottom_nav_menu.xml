@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_chart"
+        android:icon="@drawable/ic_chart_alt_light"
+        android:title="Chart" />
+
+    <item
+        android:id="@+id/nav_placeholder"
+        android:title=""
+        android:enabled="false" />
+
+    <item
+        android:id="@+id/nav_layers"
+        android:icon="@drawable/ic_layers_light"
+        android:title="Layers" />
+
+    <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_user_box_light"
+        android:title="User" />
+</menu>
