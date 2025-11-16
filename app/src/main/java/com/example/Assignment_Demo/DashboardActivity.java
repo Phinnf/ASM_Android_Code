@@ -7,14 +7,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +28,7 @@ public class DashboardActivity extends AppCompatActivity {
     private RecyclerView rvExpenses;
     private FloatingActionButton fabAddExpense;
     private Button btnGoToBudget;
-//    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvTotalSpending = findViewById(R.id.tvTotalSpending);
         tvTotalBudget = findViewById(R.id.tvTotalBudget);
         tvRemainingBudget = findViewById(R.id.tvRemainingBudget);
-//        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         tvHello.setText("Hello, " + currentUserId);
     }
@@ -78,27 +76,25 @@ public class DashboardActivity extends AppCompatActivity {
         );
 
         // BottomNavigationView listener
-//        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull android.view.MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.nav_home:
-//                        Toast.makeText(DashboardActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    case R.id.nav_chart:
-//                        Toast.makeText(DashboardActivity.this, "Chart clicked", Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    case R.id.nav_layers:
-//                        Toast.makeText(DashboardActivity.this, "Layers clicked", Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    case R.id.nav_user:
-//                        Toast.makeText(DashboardActivity.this, "User clicked", Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    default:
-//                        return false;
-//                }
-//            }
-//        });
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                Toast.makeText(DashboardActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (itemId == R.id.nav_chart) {
+                Toast.makeText(DashboardActivity.this, "Chart clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            } else if (itemId == R.id.nav_layers) {
+                Intent intent = new Intent(DashboardActivity.this, LayerActivity.class);
+                intent.putExtra("USER_ID", currentUserId);
+                startActivity(intent);
+                return true;
+            } else if (itemId == R.id.nav_user) {
+                Toast.makeText(DashboardActivity.this, "User clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void setupRecyclerView() {
