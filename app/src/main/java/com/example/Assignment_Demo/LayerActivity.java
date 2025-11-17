@@ -6,17 +6,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LayerActivity extends AppCompatActivity {
 
-    private Button btnAddNote;
+    private Button btnNote;
     private Button btnTrackByCategory;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton fabAddExpense;
     private int currentUserId;
+    private RecyclerView tasksRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +35,28 @@ public class LayerActivity extends AppCompatActivity {
             return;
         }
 
-        btnAddNote = findViewById(R.id.btnAddNote);
+        btnNote = findViewById(R.id.btnNote);
         btnTrackByCategory = findViewById(R.id.btnTrackByCategory);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fabAddExpense = findViewById(R.id.fabAddExpense);
 
-        btnAddNote.setOnClickListener(v -> {
-            Toast.makeText(LayerActivity.this, "Add Note clicked", Toast.LENGTH_SHORT).show();
-            // TODO: Implement navigation or functionality for adding a note
+        btnNote.setOnClickListener(v -> {
+            // Start the new NoteActivity and pass the USER_ID to it
+            Intent intent = new Intent(LayerActivity.this, NoteActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
         });
 
         btnTrackByCategory.setOnClickListener(v -> {
             Toast.makeText(LayerActivity.this, "Layer clicked", Toast.LENGTH_SHORT).show();
             // TODO: Implement navigation or functionality for tracking by category
         });
-        fabAddExpense.setOnClickListener(v ->
-                startActivity(new Intent(LayerActivity.this, AddExpenseActivity.class))
-        );
+
+        fabAddExpense.setOnClickListener(v -> {
+            Intent intent = new Intent(LayerActivity.this, AddExpenseActivity.class);
+            intent.putExtra("USER_ID", currentUserId); // Also pass the ID here
+            startActivity(intent);
+        });
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

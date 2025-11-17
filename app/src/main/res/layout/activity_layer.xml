@@ -8,7 +8,7 @@
     tools:context=".LayerActivity">
 
     <TextView
-        android:id="@+id/tvCategoryTitle"
+        android:id="@+id/btnCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Category and Notes"
@@ -20,18 +20,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@id/btnAddNote"/>
+        app:layout_constraintBottom_toTopOf="@id/btnNote"/>
 
     <Button
-        android:id="@+id/btnAddNote"
+        android:id="@+id/btnNote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Add Note"
+        android:text="Note"
         android:padding="16dp"
         android:textSize="18sp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle"
+        app:layout_constraintTop_toBottomOf="@id/btnCategory"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnTrackByCategory"/>
@@ -44,10 +44,11 @@
         android:padding="16dp"
         android:textSize="18sp"
         android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/btnAddNote"
+        app:layout_constraintTop_toBottomOf="@id/btnNote"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"/>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

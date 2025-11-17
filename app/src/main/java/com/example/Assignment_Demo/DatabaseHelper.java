@@ -33,7 +33,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_BUDGET_USER_ID = "USER_ID"; // Foreign Key
     public static final String COL_BUDGET_CATEGORY = "CATEGORY";
     public static final String COL_BUDGET_AMOUNT = "AMOUNT";
-
+    // Note Table
+    public static final String TABLE_NOTES = "notes";
+    public static final String COL_NOTE_ID = "ID";
+    public static final String COL_NOTE_USER_ID = "USER_ID"; // Foreign Key
+    public static final String COL_NOTE_CONTENT = "CONTENT";
+    public static final String COL_NOTE_IS_COMPLETE = "IS_COMPLETE"; // 0 for false, 1 for true
+    public static final String COL_NOTE_DATE = "DATE";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -68,6 +74,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 // Ensure each user has only 1 budget per category
                 "UNIQUE (" + COL_BUDGET_USER_ID + ", " + COL_BUDGET_CATEGORY + "))";
         db.execSQL(createBudgetsTable);
+        // Create Notes table
+        String createNotesTable = "CREATE TABLE " + TABLE_NOTES + " (" +
+                COL_NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_NOTE_USER_ID + " INTEGER, " +
+                COL_NOTE_CONTENT + " TEXT, " +
+                COL_NOTE_IS_COMPLETE + " INTEGER DEFAULT 0, " +
+                COL_NOTE_DATE + " TEXT, " +
+                "FOREIGN KEY(" + COL_NOTE_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + COL_USER_ID + "))";
+        db.execSQL(createNotesTable);
     }
 
     @Override
@@ -75,6 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BUDGETS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
         // ... (drop users and expenses tables)
         onCreate(db);
     }
@@ -261,6 +277,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
             return 0;
         }
+    }
+    /**
+     * CREATE: Add a new note
+     */
+    public boolean addNote(int userId, String content, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_NOTE_USER_ID, userId);
+        cv.put(COL_NOTE_CONTENT, content);
+        cv.put(COL_NOTE_DATE, date);
+        // IS_COMPLETE defaults to 0 (false) as per table definition
+
+        long result = db.insert(TABLE_NOTES, null, cv);
+        return result != -1;
+    }
+    /**
+     * READ: Get all notes for a user
+     * Returns a Cursor to be used by an adapter
+     */
+    public Cursor getNotes(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NOTES +
+                " WHERE " + COL_NOTE_USER_ID + " = ? " +
+                " ORDER BY " + COL_NOTE_DATE + " DESC";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+    /**
+     * UPDATE: Change a note's content
+     */
+    public boolean updateNoteContent(long noteId, String newContent) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_NOTE_CONTENT, newContent);
+
+        int result = db.update(TABLE_NOTES, cv, COL_NOTE_ID + " = ?", new String[]{String.valueOf(noteId)});
+        return result > 0;
+    }
+
+    /**
+     * UPDATE: Change a note's completion status
+     */
+    public boolean updateNoteCompletion(long noteId, boolean isComplete) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_NOTE_IS_COMPLETE, isComplete ? 1 : 0); // Convert boolean to 1 or 0
+
+        int result = db.update(TABLE_NOTES, cv, COL_NOTE_ID + " = ?", new String[]{String.valueOf(noteId)});
+        return result > 0;
+    }
+
+    /**
+     * DELETE: Remove a note
+     */
+    public boolean deleteNote(long noteId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete(TABLE_NOTES, COL_NOTE_ID + " = ?", new String[]{String.valueOf(noteId)});
+        return result > 0;
     }
     /**
      * (Advanced for Breakdown)
