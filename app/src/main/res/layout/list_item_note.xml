@@ -24,7 +24,18 @@
         app:layout_constraintStart_toEndOf="@id/cbNoteComplete"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnDeleteNote" />
+        app:layout_constraintEnd_toStartOf="@+id/btnEditNote" />
+
+    <ImageButton
+        android:id="@+id/btnEditNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        app:layout_constraintEnd_toStartOf="@id/btnDeleteNote"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <ImageButton
         android:id="@+id/btnDeleteNote"

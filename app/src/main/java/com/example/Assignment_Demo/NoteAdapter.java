@@ -18,18 +18,20 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private List<Note> noteList;
     private Context context;
     private DatabaseHelper dbHelper;
+    private OnNoteListener onNoteListener;
 
-    public NoteAdapter(Context context, List<Note> noteList, DatabaseHelper dbHelper) {
+    public NoteAdapter(Context context, List<Note> noteList, DatabaseHelper dbHelper, OnNoteListener onNoteListener) {
         this.context = context;
         this.noteList = noteList;
         this.dbHelper = dbHelper;
+        this.onNoteListener = onNoteListener;
     }
 
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_item_note, parent, false);
-        return new NoteViewHolder(view);
+        return new NoteViewHolder(view, onNoteListener);
     }
 
     @Override
@@ -39,46 +41,31 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         holder.tvNoteContent.setText(note.getContent());
         holder.cbNoteComplete.setChecked(note.isComplete());
 
-        // Call the helper function to set strikethrough
         setStrikethrough(holder.tvNoteContent, note.isComplete());
 
-        // UPDATE: Handle CheckBox click
         holder.cbNoteComplete.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Update the database
             dbHelper.updateNoteCompletion(note.getId(), isChecked);
-
-            // Update the local model
             note.setComplete(isChecked);
-
-            // Re-apply the strikethrough style
             setStrikethrough(holder.tvNoteContent, isChecked);
         });
 
-        // DELETE: Handle Delete button click
         holder.btnDeleteNote.setOnClickListener(v -> {
-            // Remove from database
             dbHelper.deleteNote(note.getId());
-
-            // Remove from list
             noteList.remove(position);
-
-            // Notify adapter
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, noteList.size());
         });
+
+        holder.btnEditNote.setOnClickListener(v -> {
+            onNoteListener.onNoteEditClick(holder.getAdapterPosition());
+        });
     }
 
-    /**
-     * Helper method to apply or remove strikethrough
-     * This is the equivalent of the <del> tag
-     */
     private void setStrikethrough(TextView textView, boolean isComplete) {
         if (isComplete) {
-            // Add strikethrough
             textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             textView.setTextColor(Color.GRAY);
         } else {
-            // Remove strikethrough
             textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             textView.setTextColor(Color.BLACK);
         }
@@ -89,17 +76,31 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return noteList.size();
     }
 
-    // ViewHolder class
-    public static class NoteViewHolder extends RecyclerView.ViewHolder {
+    public static class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CheckBox cbNoteComplete;
         TextView tvNoteContent;
         ImageButton btnDeleteNote;
+        ImageButton btnEditNote;
+        OnNoteListener onNoteListener;
 
-        public NoteViewHolder(@NonNull View itemView) {
+        public NoteViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
             cbNoteComplete = itemView.findViewById(R.id.cbNoteComplete);
             tvNoteContent = itemView.findViewById(R.id.tvNoteContent);
             btnDeleteNote = itemView.findViewById(R.id.btnDeleteNote);
+            btnEditNote = itemView.findViewById(R.id.btnEditNote);
+            this.onNoteListener = onNoteListener;
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener.onNoteClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnNoteListener {
+        void onNoteClick(int position);
+        void onNoteEditClick(int position);
     }
 }
