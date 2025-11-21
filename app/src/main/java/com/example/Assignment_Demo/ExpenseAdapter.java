@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
     public class ExpenseViewHolder extends RecyclerView.ViewHolder {
         public TextView descriptionText, amountText, categoryText, dateText;
+        public ImageView iconImage; // 1. Declare the ImageView
 
         public ExpenseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -29,6 +31,9 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             amountText = itemView.findViewById(R.id.tvItemAmount);
             categoryText = itemView.findViewById(R.id.tvItemCategory);
             dateText = itemView.findViewById(R.id.tvItemDate);
+
+            // 2. Bind the ImageView ID from your XML
+            iconImage = itemView.findViewById(R.id.imgIcon);
         }
     }
 
@@ -53,14 +58,29 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         String date = mCursor.getString(mCursor.getColumnIndexOrThrow(DatabaseHelper.COL_EXPENSE_DATE));
         long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(DatabaseHelper.COL_EXPENSE_ID));
 
+        // Set Text Data
+        holder.descriptionText.setText(description);
+        holder.amountText.setText(String.format(Locale.US, "%.0f$", amount));
+        holder.categoryText.setText(category);
+        holder.dateText.setText(date);
+
+        // 3. SET THE ICON DYNAMICALLY
+        // Call the helper method we created in Step 2
+        holder.iconImage.setImageResource(DatabaseHelper.getCategoryIcon(category));
+
+        // Optional: Change icon color based on category for better visuals
+        setCategoryColor(holder.iconImage, category);
+        holder.itemView.setTag(id);
+
         // Bind data to ViewHolder
         holder.descriptionText.setText(description);
-        holder.amountText.setText(String.format(Locale.US, "%.0fđ", amount));
+        holder.amountText.setText(String.format(Locale.US, "%.0f$", amount));
         holder.categoryText.setText("Category: " + category);
         holder.dateText.setText(date);
 
         // Save ID to tag for processing (e.g., delete)
         holder.itemView.setTag(id);
+
     }
 
     @Override
@@ -77,5 +97,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         if (newCursor != null) {
             notifyDataSetChanged();
         }
+    }
+    private void setCategoryColor(ImageView img, String category) {
+        int color;
+        switch (category) {
+            case "Food": color = 0xFFFF5722; break;      // Orange
+            case "Transportation": color = 0xFF2196F3; break; // Blue
+            case "Rent": color = 0xFF9C27B0; break;      // Purple
+            case "Education": color = 0xFF4CAF50; break; // Green
+            case "Entertainment": color = 0xFFFFC107; break; // Amber
+            default: color = 0xFF607D8B; break;          // Grey
+        }
+        img.setColorFilter(color);
     }
 }
