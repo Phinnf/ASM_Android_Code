@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_BUDGET_USER_ID = "USER_ID"; // Foreign Key
     public static final String COL_BUDGET_CATEGORY = "CATEGORY";
     public static final String COL_BUDGET_AMOUNT = "AMOUNT";
+
     // Note Table
     public static final String TABLE_NOTES = "notes";
     public static final String COL_NOTE_ID = "ID";

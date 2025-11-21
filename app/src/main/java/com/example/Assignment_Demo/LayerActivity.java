@@ -2,13 +2,13 @@ package com.example.Assignment_Demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import java.util.List;
 
 public class LayerActivity extends AppCompatActivity {
 
-    private Button btnNote;
-    private Button btnTrackByCategory;
+    private MaterialCardView cardNote;
+    private MaterialCardView cardTrack;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton fabAddExpense;
     private int currentUserId;
@@ -35,21 +35,29 @@ public class LayerActivity extends AppCompatActivity {
             return;
         }
 
-        btnNote = findViewById(R.id.btnNote);
-        btnTrackByCategory = findViewById(R.id.btnTrackByCategory);
+        cardNote = findViewById(R.id.cardNote);
+        cardTrack = findViewById(R.id.cardTrack);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fabAddExpense = findViewById(R.id.fabAddExpense);
 
-        btnNote.setOnClickListener(v -> {
+        cardNote.setOnClickListener(v -> {
             // Start the new NoteActivity and pass the USER_ID to it
             Intent intent = new Intent(LayerActivity.this, NoteActivity.class);
             intent.putExtra("USER_ID", currentUserId);
             startActivity(intent);
         });
 
-        btnTrackByCategory.setOnClickListener(v -> {
-            Toast.makeText(LayerActivity.this, "Layer clicked", Toast.LENGTH_SHORT).show();
-            // TODO: Implement navigation or functionality for tracking by category
+        cardTrack.setOnClickListener(v -> {
+            // Navigate to the BudgetActivity
+            Intent intent = new Intent(LayerActivity.this, BudgetActivity.class);
+            // Pass the current user ID (Good practice, even if BudgetActivity uses Prefs)
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
+        cardTrack.setOnClickListener(v -> {
+            Intent intent = new Intent(LayerActivity.this, CategoryAnalyticsActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
         });
 
         fabAddExpense.setOnClickListener(v -> {
