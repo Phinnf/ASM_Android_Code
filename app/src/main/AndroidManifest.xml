@@ -26,6 +26,9 @@
         <activity android:name=".DashboardActivity" />
         <activity android:name=".AddExpenseActivity" />
         <activity android:name=".BudgetActivity" />
+        <activity android:name=".LayerActivity" />
+        <activity android:name=".NoteActivity" />
+        <activity android:name=".CategoryAnalyticsActivity" />
 
 
     </application>

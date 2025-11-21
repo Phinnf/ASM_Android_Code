@@ -1,100 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="#F5F5F5">
 
     <TextView
+        android:id="@+id/tvBudgetHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
-        android:text="Set Monthly Budget"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="Set Budgets"
+        android:textColor="@android:color/black"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tvBudgetSub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Food:" />
+        android:layout_marginTop="4dp"
+        android:text="Define limits for each category"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/tvBudgetHeader"
+        app:layout_constraintTop_toBottomOf="@id/tvBudgetHeader" />
 
-    <EditText
-        android:id="@+id/etBudgetFood"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+        app:layout_constraintBottom_toTopOf="@+id/btnSaveBudgets"
+        app:layout_constraintTop_toBottomOf="@+id/tvBudgetSub">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Transportation:" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <EditText
-        android:id="@+id/etBudgetTransport"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Food &amp; Dining"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rent:" />
+                <EditText
+                    android:id="@+id/etBudgetFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etBudgetRent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Transportation"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Education:" />
+                <EditText
+                    android:id="@+id/etBudgetTransport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etBudgetEducation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Rent"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Entertainment:" />
+                <EditText
+                    android:id="@+id/etBudgetRent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etBudgetEntertainment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Education"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Other:" />
+                <EditText
+                    android:id="@+id/etBudgetEducation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etBudgetOther"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:hint="0"
-        android:inputType="numberDecimal" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entertainment"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/etBudgetEntertainment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Other"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <EditText
+                    android:id="@+id/etBudgetOther"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/btnSaveBudgets"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Budgets" />
-</LinearLayout>
+        android:layout_height="56dp"
+        android:layout_margin="20dp"
+        android:text="Save Budgets"
+        android:textSize="16sp"
+        android:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

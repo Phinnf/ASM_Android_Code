@@ -9,4 +9,5 @@
     <color name="black">#FF000000</color>
 
     <color name="green_light">#7CFCB1</color>
+    <color name="grey_hint">#888888</color>
 </resources>
