@@ -362,5 +362,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return 0;
         }
     }
+    public static int getCategoryIcon(String category) {
+        if (category == null) return R.drawable.ic_other; // Safety check
 
+        switch (category) {
+            case "Food":
+                return R.drawable.ic_food;
+            case "Transportation":
+                return R.drawable.ic_transport; // Ensure you named your file ic_transport
+            case "Rent":
+                return R.drawable.ic_rent;
+            case "Education":
+                return R.drawable.ic_education;
+            case "Entertainment":
+                return R.drawable.ic_entertainment;
+            case "Other":
+            default:
+                return R.drawable.ic_other;
+        }
+    }
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView; // IMPORT THIS
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_analytics); // See Step 3
+        setContentView(R.layout.activity_category_analytics);
 
         dbHelper = new DatabaseHelper(this);
         container = findViewById(R.id.llCategoryContainer);
@@ -32,7 +33,6 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
         // Get User ID
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
-            // Fallback to prefs if intent fails
             SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             currentUserId = prefs.getInt("USER_ID", -1);
         }
@@ -40,7 +40,7 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
     }
 
     private void loadCategoryData() {
-        container.removeAllViews(); // Clear previous views if any
+        container.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
         for (String category : CATEGORIES) {
@@ -55,6 +55,10 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
                 View rowView = inflater.inflate(R.layout.item_category_status, container, false);
 
                 // 3. Bind Views
+                // --- FIX START: Bind the ImageView ---
+                ImageView iconView = rowView.findViewById(R.id.imgCategoryIcon);
+                // --- FIX END ---
+
                 TextView tvName = rowView.findViewById(R.id.tvCategoryName);
                 TextView tvStats = rowView.findViewById(R.id.tvCategoryStats);
                 ProgressBar progressBar = rowView.findViewById(R.id.progressBarBudget);
@@ -63,6 +67,10 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
                 // 4. Set Logic
                 tvName.setText(category);
                 tvStats.setText(String.format(Locale.US, "$%.0f / $%.0f", spent, budget));
+
+                // --- FIX START: Set the correct icon ---
+                iconView.setImageResource(DatabaseHelper.getCategoryIcon(category));
+                // --- FIX END ---
 
                 if (budget > 0) {
                     int progress = (int) ((spent / budget) * 100);
