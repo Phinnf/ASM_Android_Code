@@ -10,4 +10,12 @@
 
     <color name="green_light">#7CFCB1</color>
     <color name="grey_hint">#888888</color>
+
+    <color name="primary_green">#00B07B</color>
+    <color name="primary_dark">#0EA77A</color>
+    <color name="white_80">#CCFFFFFF</color>
+    <color name="expense_color">#2B8BFF</color>
+    <color name="gray_text">#9AA4A3</color>
+    <color name="light_background">#F6FBFA</color>
+    <color name="divider">#E6E6E6</color>
 </resources>

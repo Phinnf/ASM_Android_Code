@@ -3,4 +3,7 @@
 <!--    <solid android:color="@color/backgroundLight"/>-->
     <corners android:radius="16dp"/>
     <stroke android:color="@color/black" android:width="1dp"/>
+
+    <solid android:color="#EAF9F3"/>
+    <corners android:radius="16dp"/>
 </shape>
