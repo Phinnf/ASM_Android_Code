@@ -8,11 +8,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,7 +26,8 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private ExpenseAdapter expenseAdapter;
 
-    private TextView tvHello, tvCurrentMonth, tvTotalSpending, tvTotalBudget, tvRemainingBudget;
+    private TextView tvCurrentMonth, tvTotalSpending, tvTotalBudget, tvRemainingBudget, tvProgressLabel;
+    private LinearProgressIndicator progressBar;
     private RecyclerView rvExpenses;
     private FloatingActionButton fabAddExpense;
     private Button btnGoToBudget;
@@ -37,10 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        // Lấy User ID từ Intent
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
-            Toast.makeText(this, "User ID not found in Intent", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "User ID not found", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -51,47 +53,40 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvHello = findViewById(R.id.tvHello);
         rvExpenses = findViewById(R.id.rvExpenses);
         fabAddExpense = findViewById(R.id.fabAddExpense);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Views inside the Include layout
         tvCurrentMonth = findViewById(R.id.tvCurrentMonth);
         tvTotalSpending = findViewById(R.id.tvTotalSpending);
         tvTotalBudget = findViewById(R.id.tvTotalBudget);
         tvRemainingBudget = findViewById(R.id.tvRemainingBudget);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        tvHello.setText("Hello, " + currentUserId);
+        tvProgressLabel = findViewById(R.id.tvProgressLabel);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void setupListeners() {
-        // FloatingActionButton để thêm Expense
         fabAddExpense.setOnClickListener(v ->
                 startActivity(new Intent(DashboardActivity.this, AddExpenseActivity.class))
         );
 
-        // Button đi đến Budget
         btnGoToBudget.setOnClickListener(v ->
                 startActivity(new Intent(DashboardActivity.this, BudgetActivity.class))
         );
 
-        // BottomNavigationView listener
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
-                Toast.makeText(DashboardActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (itemId == R.id.nav_chart) {
-                Intent intent = new Intent(DashboardActivity.this, ChartActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(DashboardActivity.this, ChartActivity.class));
                 return true;
             } else if (itemId == R.id.nav_layers) {
                 Intent intent = new Intent(DashboardActivity.this, LayerActivity.class);
                 intent.putExtra("USER_ID", currentUserId);
                 startActivity(intent);
-                return true;
-            } else if (itemId == R.id.nav_user) {
-                Toast.makeText(DashboardActivity.this, "User clicked", Toast.LENGTH_SHORT).show();
                 return true;
             }
             return false;
@@ -100,7 +95,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         rvExpenses.setLayoutManager(new LinearLayoutManager(this));
-        expenseAdapter = new ExpenseAdapter(this, null); // khởi tạo với cursor null
+        expenseAdapter = new ExpenseAdapter(this, null);
         rvExpenses.setAdapter(expenseAdapter);
     }
 
@@ -114,24 +109,42 @@ public class DashboardActivity extends AppCompatActivity {
     private void loadDashboardSummary() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.US);
-        tvCurrentMonth.setText("Overview " + sdf.format(calendar.getTime()));
+        tvCurrentMonth.setText(sdf.format(calendar.getTime()));
 
         double totalSpending = dbHelper.getTotalSpendingForCurrentMonth(currentUserId);
         double totalBudget = dbHelper.getTotalBudget(currentUserId);
         double remaining = totalBudget - totalSpending;
 
-        tvTotalSpending.setText(String.format(Locale.US, "Expense: %.0f $", totalSpending));
-        tvTotalBudget.setText(String.format(Locale.US, "USD: %.0f $/Mo", totalBudget));
-        tvRemainingBudget.setText(String.format(Locale.US, "Remaining: %.0f $", remaining));
+        // 1. Format Currency nicely (e.g., $1,250 instead of 1250.0)
+        tvTotalSpending.setText(String.format(Locale.US, "$%,.0f", totalSpending));
+        tvTotalBudget.setText(String.format(Locale.US, "$%,.0f", totalBudget));
+        tvRemainingBudget.setText(String.format(Locale.US, "$%,.0f", remaining));
 
-        tvRemainingBudget.setTextColor(getResources().getColor(
-                remaining < 0 ? android.R.color.holo_red_dark : android.R.color.holo_green_dark
-        ));
+        // 2. Logic for Progress Bar
+        int progress = 0;
+        if (totalBudget > 0) {
+            progress = (int) ((totalSpending / totalBudget) * 100);
+        }
+
+        // 3. Set Progress with animation
+        progressBar.setProgressCompat(progress, true);
+        tvProgressLabel.setText(progress + "%");
+
+        // 4. Color Logic:
+        if (remaining < 0) {
+            // Use Android default RED if over budget (since you didn't provide a red in colors.xml)
+            tvRemainingBudget.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_light));
+        } else {
+            // Use your "white" color if under budget (to look good on the Green card)
+            tvRemainingBudget.setTextColor(ContextCompat.getColor(this, R.color.white));
+        }
     }
 
     private void loadExpenseList() {
         Cursor newCursor = dbHelper.getExpenses(currentUserId);
-        expenseAdapter.swapCursor(newCursor);
+        if(expenseAdapter != null) {
+            expenseAdapter.swapCursor(newCursor);
+        }
     }
 
     @Override
