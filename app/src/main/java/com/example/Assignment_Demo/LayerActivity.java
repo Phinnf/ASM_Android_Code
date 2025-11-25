@@ -75,8 +75,10 @@ public class LayerActivity extends AppCompatActivity {
                 finish(); // Finish current activity to prevent back stack issues
                 return true;
             } else if (itemId == R.id.nav_chart) {
-                Toast.makeText(LayerActivity.this, "Chart clicked", Toast.LENGTH_SHORT).show();
-                return true;
+                Intent intent = new Intent(LayerActivity.this, ChartActivity.class);
+                intent.putExtra("USER_ID", currentUserId);
+                startActivity(intent);
+                finish();
             } else if (itemId == R.id.nav_layers) {
                 Toast.makeText(LayerActivity.this, "Layers clicked", Toast.LENGTH_SHORT).show();
                 return true;

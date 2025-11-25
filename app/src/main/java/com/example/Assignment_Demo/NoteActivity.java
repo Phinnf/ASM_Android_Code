@@ -3,6 +3,7 @@ package com.example.Assignment_Demo;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ public class NoteActivity extends AppCompatActivity implements NoteAdapter.OnNot
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
+        View btnBack = findViewById(R.id.btn_back);
+
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
             Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show();
@@ -55,6 +58,8 @@ public class NoteActivity extends AppCompatActivity implements NoteAdapter.OnNot
                 Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnBack.setOnClickListener(v -> finish());
 
         setupRecyclerView();
         loadNotesFromDatabase();

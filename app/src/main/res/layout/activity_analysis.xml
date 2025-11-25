@@ -132,6 +132,12 @@
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart_expense"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 
     <!-- White rounded content container overlapping header -->
@@ -220,26 +226,6 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:id="@+id/tv_chart_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Income and Expenses"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <com.github.mikephil.charting.charts.BarChart
-                            android:id="@+id/chart_expense"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@id/tv_chart_title"
-                            android:layout_marginTop="8dp" />
-                    </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Income & Expense summary row -->
@@ -263,6 +249,21 @@
                             android:text="Income"
                             android:textColor="@color/gray_text"
                             android:textSize="14sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:id="@+id/tv_chart_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income and Expenses"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
 
                         <TextView
                             android:id="@+id/tv_income"
@@ -388,8 +389,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="24dp" />
-
             </LinearLayout>
+
         </ScrollView>
     </androidx.cardview.widget.CardView>
 

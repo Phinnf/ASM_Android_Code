@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView; // IMPORT THIS
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,6 +28,9 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_analytics);
 
+        View btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> finish());
+
         dbHelper = new DatabaseHelper(this);
         container = findViewById(R.id.llCategoryContainer);
 
@@ -37,6 +41,7 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
             currentUserId = prefs.getInt("USER_ID", -1);
         }
         loadCategoryData();
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void loadCategoryData() {
@@ -87,7 +92,7 @@ public class CategoryAnalyticsActivity extends AppCompatActivity {
                 } else {
                     // No budget set, but money spent
                     progressBar.setProgress(0);
-                    tvStats.setText(String.format(Locale.US, "$%.0f (No Limit)", spent));
+                    tvStats.setText(String.format(Locale.US, "$%.0f (Not spent)", spent));
                 }
 
                 // 5. Add row to the main container

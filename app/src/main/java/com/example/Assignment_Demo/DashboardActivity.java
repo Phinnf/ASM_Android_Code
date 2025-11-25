@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(DashboardActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (itemId == R.id.nav_chart) {
-                Intent intent = new Intent(DashboardActivity.this, AnalysisActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, ChartActivity.class);
                 startActivity(intent);
                 return true;
             } else if (itemId == R.id.nav_layers) {

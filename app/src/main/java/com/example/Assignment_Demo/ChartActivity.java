@@ -20,7 +20,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator; //
 
 import java.util.ArrayList;
 
-public class AnalysisActivity extends AppCompatActivity {
+public class ChartActivity extends AppCompatActivity {
 
     // 1. Khai báo biến View (Cập nhật theo XML mới)
     private TextView tvTotalBudget, tvTotalSpending, tvRemainingBudget; // Header card
