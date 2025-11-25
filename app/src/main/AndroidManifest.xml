@@ -13,6 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab_Demo_Test"
         tools:targetApi="31">
+
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -30,6 +32,9 @@
         <activity android:name=".NoteActivity" />
         <activity android:name=".CategoryAnalyticsActivity" />
 
+        <activity
+            android:name=".AnalysisActivity"
+            android:exported="false" />
 
     </application>
 
