@@ -1,66 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="12dp"
-    android:background="@color/white"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/imgCategoryIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="12dp"
-            android:padding="6dp"
-            android:src="@drawable/ic_food"
-            android:background="@drawable/bg_circle_light_green"
-            app:tint="@color/colorPrimaryDark"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#E8F5E9"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/imgCategoryIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_food"
+                    app:tint="#2E7D32"/>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvCategoryName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="Food &amp; Dining"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/tvCategoryStats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="$150 / $300"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#666666"/>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBarBudget"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="12dp"
+            android:max="100"
+            android:progress="50"
+            android:progressDrawable="@drawable/progress_custom"
+            android:progressTint="#2E7D32"
+            tools:progress="50"/>
 
         <TextView
-            android:id="@+id/tvCategoryName"
-            android:layout_width="0dp"
+            android:id="@+id/tvAlert"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Food"
+            android:text="⚠ Over Budget!"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/black"/>
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            tools:visibility="visible"/>
 
-        <TextView
-            android:id="@+id/tvCategoryStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="$150 / $300"
-            android:textSize="14sp"
-            android:textColor="#666666"/>
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBarBudget"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:layout_marginTop="8dp"
-        android:max="100"
-        android:progress="50"
-        android:progressTint="@color/colorPrimary" />
-
-    <TextView
-        android:id="@+id/tvAlert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Over Budget!"
-        android:textColor="#D32F2F"
-        android:textSize="12sp"
-        android:visibility="gone"
-        android:layout_marginTop="4dp"/>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -76,7 +76,7 @@ public class LayerActivity extends AppCompatActivity {
                 finish(); // Finish current activity to prevent back stack issues
                 return true;
             } else if (itemId == R.id.nav_chart) {
-                Intent intent = new Intent(LayerActivity.this, AnalysisActivity.class);
+                Intent intent = new Intent(LayerActivity.this, ChartActivity.class);
                 intent.putExtra("USER_ID", currentUserId);
                 startActivity(intent);
                 return true;
@@ -87,6 +87,7 @@ public class LayerActivity extends AppCompatActivity {
             return true;
         });
 
+        // Set the current item in the bottom navigation to 'layers' when this activity is created
         bottomNavigationView.setSelectedItemId(R.id.nav_layers);
     }
 }

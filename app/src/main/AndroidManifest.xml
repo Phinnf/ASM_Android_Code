@@ -33,7 +33,7 @@
         <activity android:name=".CategoryAnalyticsActivity" />
 
         <activity
-            android:name=".AnalysisActivity"
+            android:name=".ChartActivity"
             android:exported="false" />
 
     </application>

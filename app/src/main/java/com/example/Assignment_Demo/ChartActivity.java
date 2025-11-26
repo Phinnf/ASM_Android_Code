@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AnalysisActivity extends AppCompatActivity {
+public class ChartActivity extends AppCompatActivity {
 
     private int currentUserId;
     private FloatingActionButton fabAddExpense;

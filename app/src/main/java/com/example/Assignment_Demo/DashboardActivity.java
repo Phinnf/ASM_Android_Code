@@ -124,7 +124,7 @@ public class DashboardActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 return true;
             } else if (id == R.id.nav_chart) {
-                startActivity(new Intent(this, AnalysisActivity.class)
+                startActivity(new Intent(this, ChartActivity.class)
                         .putExtra("USER_ID", currentUserId));
                 return true;
             } else if (id == R.id.nav_layers) {
