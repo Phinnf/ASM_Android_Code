@@ -381,4 +381,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 return R.drawable.ic_other;
         }
     }
+    public Cursor getCategorySpendingSummary(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.US);
+        String currentMonth = sdf.format(calendar.getTime());
+
+        // Sum expenses by Category for this month
+        String query = "SELECT " + COL_EXPENSE_CATEGORY + ", SUM(" + COL_EXPENSE_AMOUNT + ") as Total " +
+                "FROM " + TABLE_EXPENSES +
+                " WHERE " + COL_EXPENSE_USER_ID + " = ? AND " +
+                " strftime('%Y-%m', " + COL_EXPENSE_DATE + ") = ? " +
+                " GROUP BY " + COL_EXPENSE_CATEGORY;
+
+        return db.rawQuery(query, new String[]{String.valueOf(userId), currentMonth});
+    }
 }
