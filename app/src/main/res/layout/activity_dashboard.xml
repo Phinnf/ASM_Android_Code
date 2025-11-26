@@ -42,9 +42,9 @@
             <LinearLayout
                 android:id="@+id/chartDashboard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp">
+                android:layout_height="298dp"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
                 <!-- Tabs -->
                 <LinearLayout
@@ -122,7 +122,7 @@
                             android:textStyle="bold" />
 
                         <com.github.mikephil.charting.charts.BarChart
-                            android:id="@+id/chart_expense"
+                            android:id="@+id/chartExpense"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_below="@id/tv_chart_title"

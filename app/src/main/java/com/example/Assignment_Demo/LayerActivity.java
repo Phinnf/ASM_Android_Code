@@ -68,6 +68,7 @@ public class LayerActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
+
             if (itemId == R.id.nav_home) {
                 Intent intent = new Intent(LayerActivity.this, DashboardActivity.class);
                 intent.putExtra("USER_ID", currentUserId);
@@ -75,19 +76,17 @@ public class LayerActivity extends AppCompatActivity {
                 finish(); // Finish current activity to prevent back stack issues
                 return true;
             } else if (itemId == R.id.nav_chart) {
-                Toast.makeText(LayerActivity.this, "Chart clicked", Toast.LENGTH_SHORT).show();
-                return true;
-            } else if (itemId == R.id.nav_layers) {
-                Toast.makeText(LayerActivity.this, "Layers clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LayerActivity.this, AnalysisActivity.class);
+                intent.putExtra("USER_ID", currentUserId);
+                startActivity(intent);
                 return true;
             } else if (itemId == R.id.nav_user) {
-                Toast.makeText(LayerActivity.this, "User clicked", Toast.LENGTH_SHORT).show();
-                return true;
+                // TODO: Logic user
             }
-            return false;
+
+            return true;
         });
 
-        // Set the current item in the bottom navigation to 'layers' when this activity is created
         bottomNavigationView.setSelectedItemId(R.id.nav_layers);
     }
 }

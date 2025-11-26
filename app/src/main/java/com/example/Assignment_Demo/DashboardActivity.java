@@ -3,14 +3,17 @@ package com.example.Assignment_Demo;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,11 +27,19 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private ExpenseAdapter expenseAdapter;
 
-    private TextView tvHello, tvCurrentMonth, tvTotalSpending, tvTotalBudget, tvRemainingBudget;
+    private TextView tvHello;
+    private TextView tabDaily, tabWeekly, tabMonthly, tabYear;
     private RecyclerView rvExpenses;
     private FloatingActionButton fabAddExpense;
     private Button btnGoToBudget;
     private BottomNavigationView bottomNavigationView;
+
+    // Layout include
+    private View summaryInclude;
+
+    private BarChart chartExpense;
+
+    private String selectedTab = "Daily";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +48,16 @@ public class DashboardActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        // Lấy User ID từ Intent
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
-            Toast.makeText(this, "User ID not found in Intent", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "User ID missing", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
         initializeViews();
-        setupListeners();
+        setupTabListeners();
+        setupOtherListeners();
         setupRecyclerView();
     }
 
@@ -55,43 +66,72 @@ public class DashboardActivity extends AppCompatActivity {
         rvExpenses = findViewById(R.id.rvExpenses);
         fabAddExpense = findViewById(R.id.fabAddExpense);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
-        tvCurrentMonth = findViewById(R.id.tvCurrentMonth);
-        tvTotalSpending = findViewById(R.id.tvTotalSpending);
-        tvTotalBudget = findViewById(R.id.tvTotalBudget);
-        tvRemainingBudget = findViewById(R.id.tvRemainingBudget);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        tvHello.setText("Hello, " + currentUserId);
+        summaryInclude = findViewById(R.id.includeSummary);
+
+        String username = dbHelper.getUserName(currentUserId);
+        tvHello.setText("Hello, " + username);
+
+        chartExpense = findViewById(R.id.chartExpense);
+
+        tabDaily = findViewById(R.id.tab_daily);
+        tabWeekly = findViewById(R.id.tab_weekly);
+        tabMonthly = findViewById(R.id.tab_monthly);
+        tabYear = findViewById(R.id.tab_year);
     }
 
-    private void setupListeners() {
-        // FloatingActionButton để thêm Expense
+    private void setupTabListeners() {
+        View.OnClickListener tabListener = view -> {
+            resetTabStyle(tabDaily);
+            resetTabStyle(tabWeekly);
+            resetTabStyle(tabMonthly);
+            resetTabStyle(tabYear);
+
+            ((TextView) view).setBackgroundResource(R.drawable.tab_selected);
+            ((TextView) view).setTextColor(ContextCompat.getColor(this, R.color.primary_dark));
+
+            if (view == tabDaily) selectedTab = "Daily";
+            else if (view == tabWeekly) selectedTab = "Weekly";
+            else if (view == tabMonthly) selectedTab = "Monthly";
+            else if (view == tabYear) selectedTab = "Year";
+
+            ChartHelper.loadChart(this, chartExpense, selectedTab, currentUserId, dbHelper);
+        };
+
+        tabDaily.setOnClickListener(tabListener);
+        tabWeekly.setOnClickListener(tabListener);
+        tabMonthly.setOnClickListener(tabListener);
+        tabYear.setOnClickListener(tabListener);
+    }
+
+    private void resetTabStyle(TextView tab) {
+        tab.setBackgroundResource(0);
+        tab.setTextColor(ContextCompat.getColor(this, R.color.gray_text));
+    }
+
+    private void setupOtherListeners() {
         fabAddExpense.setOnClickListener(v ->
-                startActivity(new Intent(DashboardActivity.this, AddExpenseActivity.class))
+                startActivity(new Intent(this, AddExpenseActivity.class))
         );
 
-        // Button đi đến Budget
         btnGoToBudget.setOnClickListener(v ->
-                startActivity(new Intent(DashboardActivity.this, BudgetActivity.class))
+                startActivity(new Intent(this, BudgetActivity.class))
         );
 
-        // BottomNavigationView listener
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                Toast.makeText(DashboardActivity.this, "Home clicked", Toast.LENGTH_SHORT).show();
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
                 return true;
-            } else if (itemId == R.id.nav_chart) {
-                Intent intent = new Intent(DashboardActivity.this, AnalysisActivity.class);
-                startActivity(intent);
+            } else if (id == R.id.nav_chart) {
+                startActivity(new Intent(this, AnalysisActivity.class)
+                        .putExtra("USER_ID", currentUserId));
                 return true;
-            } else if (itemId == R.id.nav_layers) {
-                Intent intent = new Intent(DashboardActivity.this, LayerActivity.class);
-                intent.putExtra("USER_ID", currentUserId);
-                startActivity(intent);
+            } else if (id == R.id.nav_layers) {
+                startActivity(new Intent(this, LayerActivity.class)
+                        .putExtra("USER_ID", currentUserId));
                 return true;
-            } else if (itemId == R.id.nav_user) {
-                Toast.makeText(DashboardActivity.this, "User clicked", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_user) {
                 return true;
             }
             return false;
@@ -100,13 +140,14 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         rvExpenses.setLayoutManager(new LinearLayoutManager(this));
-        expenseAdapter = new ExpenseAdapter(this, null); // khởi tạo với cursor null
+        expenseAdapter = new ExpenseAdapter(this, null);
         rvExpenses.setAdapter(expenseAdapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         loadDashboardSummary();
         loadExpenseList();
     }
@@ -114,19 +155,46 @@ public class DashboardActivity extends AppCompatActivity {
     private void loadDashboardSummary() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.US);
-        tvCurrentMonth.setText("Overview " + sdf.format(calendar.getTime()));
+
+        TextView tvCurrentMonth = summaryInclude.findViewById(R.id.tvCurrentMonth);
+        tvCurrentMonth.setText(sdf.format(calendar.getTime()));
 
         double totalSpending = dbHelper.getTotalSpendingForCurrentMonth(currentUserId);
         double totalBudget = dbHelper.getTotalBudget(currentUserId);
-        double remaining = totalBudget - totalSpending;
 
-        tvTotalSpending.setText(String.format(Locale.US, "Expense: %.0f $", totalSpending));
-        tvTotalBudget.setText(String.format(Locale.US, "USD: %.0f $/Mo", totalBudget));
-        tvRemainingBudget.setText(String.format(Locale.US, "Remaining: %.0f $", remaining));
+        SummaryHelper.updateSummary(summaryInclude, totalBudget, totalSpending, this);
 
-        tvRemainingBudget.setTextColor(getResources().getColor(
-                remaining < 0 ? android.R.color.holo_red_dark : android.R.color.holo_green_dark
-        ));
+        // Load chart with selected tab
+        ChartHelper.loadChart(this, chartExpense, selectedTab, currentUserId, dbHelper);
+
+        // Update initial tab UI
+        updateTabUI(selectedTab);
+    }
+
+    private void updateTabUI(String tab) {
+        resetTabStyle(tabDaily);
+        resetTabStyle(tabWeekly);
+        resetTabStyle(tabMonthly);
+        resetTabStyle(tabYear);
+
+        switch (tab) {
+            case "Daily":
+                tabDaily.setBackgroundResource(R.drawable.tab_selected);
+                tabDaily.setTextColor(ContextCompat.getColor(this, R.color.primary_dark));
+                break;
+            case "Weekly":
+                tabWeekly.setBackgroundResource(R.drawable.tab_selected);
+                tabWeekly.setTextColor(ContextCompat.getColor(this, R.color.primary_dark));
+                break;
+            case "Monthly":
+                tabMonthly.setBackgroundResource(R.drawable.tab_selected);
+                tabMonthly.setTextColor(ContextCompat.getColor(this, R.color.primary_dark));
+                break;
+            case "Year":
+                tabYear.setBackgroundResource(R.drawable.tab_selected);
+                tabYear.setTextColor(ContextCompat.getColor(this, R.color.primary_dark));
+                break;
+        }
     }
 
     private void loadExpenseList() {
