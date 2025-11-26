@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.text.SimpleDateFormat;
@@ -381,4 +383,110 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 return R.drawable.ic_other;
         }
     }
+
+    public String getUserName(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT " + COL_USER_USERNAME + " FROM " + TABLE_USERS + " WHERE " + COL_USER_ID + " = ?",
+                new String[]{String.valueOf(userId)}
+        );
+        String username = "";
+        if (cursor.moveToFirst()) {
+            username = cursor.getString(0);
+        }
+        cursor.close();
+        return username;
+    }
+
+//    Tổng chi tiêu Analysis
+    public double getTotalSpendingForDate(int userId, String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT SUM(" + COL_EXPENSE_AMOUNT + ") FROM " + TABLE_EXPENSES +
+                        " WHERE " + COL_EXPENSE_USER_ID + " = ? AND " + COL_EXPENSE_DATE + " = ?",
+                new String[]{String.valueOf(userId), date}
+        );
+        double total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+        cursor.close();
+        return total;
+    }
+
+    public ArrayList<Double> getTotalSpendingForWeek(int userId) {
+        ArrayList<Double> result = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        for (int i = 0; i < 7; i++) {
+            String date = sdf.format(cal.getTime());
+            result.add(getTotalSpendingForDate(userId, date));
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return result;
+    }
+
+    public ArrayList<Double> getTotalSpendingForMonth(int userId) {
+        ArrayList<Double> result = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        for (int i = 0; i < maxDay; i++) {
+            String date = sdf.format(cal.getTime());
+            result.add(getTotalSpendingForDate(userId, date));
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return result;
+    }
+
+    public ArrayList<Double> getTotalSpendingForYear(int userId) {
+        ArrayList<Double> result = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.US);
+        for (int i = 0; i < 12; i++) {
+            String month = sdf.format(cal.getTime());
+            result.add(getTotalSpendingForMonthString(userId, month)); // dùng SUM query theo tháng
+            cal.add(Calendar.MONTH, 1);
+        }
+        return result;
+    }
+
+    public double getTotalSpendingForMonthString(int userId, String monthYear) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT SUM(" + COL_EXPENSE_AMOUNT + ") FROM " + TABLE_EXPENSES +
+                        " WHERE " + COL_EXPENSE_USER_ID + " = ? AND strftime('%Y-%m', " + COL_EXPENSE_DATE + ") = ?",
+                new String[]{String.valueOf(userId), monthYear}
+        );
+        double total = 0;
+        if (cursor.moveToFirst()) {
+            total = cursor.getDouble(0);
+        }
+        cursor.close();
+        return total;
+    }
+
+    public java.util.Date getDateOfWeek(int index) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); // bắt đầu từ thứ 2
+        cal.add(Calendar.DAY_OF_MONTH, index); // cộng thêm index ngày
+        return cal.getTime();
+    }
+
+    // Trả về Date object của tháng i trong năm hiện tại (0 = Jan)
+    public java.util.Date getMonthDate(int index) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, 0); // bắt đầu từ Jan
+        cal.set(Calendar.DAY_OF_MONTH, 1); // ngày đầu tháng
+        cal.add(Calendar.MONTH, index); // cộng index tháng
+        return cal.getTime();
+    }
+
+
+
+
+
 }
