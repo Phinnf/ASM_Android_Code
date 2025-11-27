@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
@@ -17,6 +18,8 @@ public class BudgetActivity extends AppCompatActivity {
     // Map to link EditText with Category name
     private Map<String, EditText> budgetEditTextMap;
     private Button btnSaveBudgets;
+    private ImageView btnBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,12 @@ public class BudgetActivity extends AppCompatActivity {
         budgetEditTextMap.put("Other", findViewById(R.id.etBudgetOther));
 
         btnSaveBudgets = findViewById(R.id.btnSaveBudgets);
+        btnBack = findViewById(R.id.btn_back);
+
+        btnBack.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        });
     }
 
     // Load saved budgets from DB into the EditTexts

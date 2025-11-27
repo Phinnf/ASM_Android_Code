@@ -37,8 +37,10 @@ public class ChartHelper {
                                 .format(Calendar.getInstance().getTime())
                 );
 
-                entries.add(new BarEntry(0, (float) todayExpense));
-                labels.add("Today");
+                if (todayExpense > 0) {
+                    entries.add(new BarEntry(0, (float) todayExpense));
+                    labels.add("Today");
+                }
                 break;
 
             case "Weekly":
@@ -46,16 +48,23 @@ public class ChartHelper {
                 String[] dayLabels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
                 for (int i = 0; i < weekExpenses.size(); i++) {
-                    entries.add(new BarEntry(i, weekExpenses.get(i).floatValue()));
-                    labels.add(dayLabels[i]);
+                    float value = weekExpenses.get(i).floatValue();
+                    if (value > 0) {
+                        entries.add(new BarEntry(entries.size(), value));
+                        labels.add(dayLabels[i]);
+                    }
                 }
                 break;
 
             case "Monthly":
                 ArrayList<Double> monthExpenses = dbHelper.getTotalSpendingForMonth(currentUserId);
+
                 for (int i = 0; i < monthExpenses.size(); i++) {
-                    entries.add(new BarEntry(i, monthExpenses.get(i).floatValue()));
-                    labels.add(String.valueOf(i + 1));
+                    float v = monthExpenses.get(i).floatValue();
+                    if (v > 0) {
+                        entries.add(new BarEntry(entries.size(), v));
+                        labels.add(String.valueOf(i + 1));
+                    }
                 }
                 break;
 
@@ -65,12 +74,22 @@ public class ChartHelper {
                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
                 for (int i = 0; i < yearExpenses.size(); i++) {
-                    entries.add(new BarEntry(i, yearExpenses.get(i).floatValue()));
-                    labels.add(months[i]);
+                    float v = yearExpenses.get(i).floatValue();
+                    if (v > 0) {
+                        entries.add(new BarEntry(entries.size(), v));
+                        labels.add(months[i]);
+                    }
                 }
                 break;
         }
 
+        if (entries.isEmpty()) {
+            chartExpense.clear();
+            chartExpense.invalidate();
+            return;
+        }
+
+        // ✔ Dữ liệu hợp lệ → render chart
         BarDataSet dataSet = new BarDataSet(entries, "Expenses");
         dataSet.setColor(ContextCompat.getColor(context, R.color.primary_dark));
         dataSet.setValueTextColor(context.getResources().getColor(android.R.color.black));
@@ -81,6 +100,7 @@ public class ChartHelper {
 
         chartExpense.setData(barData);
 
+        // Cài đặt trục X
         XAxis xAxis = chartExpense.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

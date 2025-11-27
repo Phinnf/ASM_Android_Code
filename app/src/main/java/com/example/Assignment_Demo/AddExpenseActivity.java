@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,8 @@ public class AddExpenseActivity extends AppCompatActivity {
 
     private Calendar selectedDate = Calendar.getInstance();
     private int currentUserId;
+    private ImageView btnBack;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class AddExpenseActivity extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSelectDate = findViewById(R.id.btnSelectDate);
         btnSaveExpense = findViewById(R.id.btnSaveExpense);
+        btnBack = findViewById(R.id.btn_back);
+
 
         // Setup Category Spinner
         // You should define this list in res/values/strings.xml
@@ -59,6 +64,11 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         // Setup Save Button
         btnSaveExpense.setOnClickListener(v -> saveExpense());
+
+        btnBack.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        });
     }
 
     private void showDatePicker() {

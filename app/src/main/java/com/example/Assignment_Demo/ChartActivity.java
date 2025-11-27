@@ -30,7 +30,7 @@ public class ChartActivity extends AppCompatActivity {
     private View summaryInclude;
     private TextView tvIncome, tvExpense;
     private CircularProgressIndicator progressTravel, progressCar;
-    private ImageView btnBack, btnNotify;
+    private ImageView btnBack;
     private BarChart chartExpense;
 
     private TextView tabDaily, tabWeekly, tabMonthly, tabYear;
@@ -66,7 +66,7 @@ public class ChartActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btn_back);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
-        btnNotify = findViewById(R.id.btn_notify);
+//        btnNotify = findViewById(R.id.btn_notify);
         chartExpense = findViewById(R.id.chart_expense);
 
         tabDaily = findViewById(R.id.tab_daily);
