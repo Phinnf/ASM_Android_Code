@@ -18,7 +18,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Users Table
     public static final String TABLE_USERS = "users";
     public static final String COL_USER_ID = "ID";
-    public static final String COL_USER_USERNAME = "USERNAME";
+    public static final String COL_USER_FULLNAME = "FULLNAME";
+    public static final String COL_USER_EMAIL = "USEREMAIL";
     public static final String COL_USER_PASSWORD = "PASSWORD";
 
     // Expenses Table (Prepare for Lab 2)
@@ -52,8 +53,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create Users table
         String createUsersTable = "CREATE TABLE " + TABLE_USERS + " (" +
+
                 COL_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_USER_USERNAME + " TEXT UNIQUE, " +
+                COL_USER_FULLNAME + " TEXT, " +
+                COL_USER_EMAIL + " TEXT UNIQUE, " +
                 COL_USER_PASSWORD + " TEXT)";
         db.execSQL(createUsersTable);
 
@@ -103,10 +106,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Register new user
      */
-    public boolean registerUser(String username, String password) {
+    public boolean registerUser(String fullname, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COL_USER_USERNAME, username);
+        cv.put(COL_USER_FULLNAME, fullname);
+        cv.put(COL_USER_EMAIL, email);
         cv.put(COL_USER_PASSWORD, password); // Should be encrypted in production
 
         long result = db.insert(TABLE_USERS, null, cv);
@@ -118,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public boolean checkUsernameExists(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COL_USER_USERNAME + " = ?", new String[]{username});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " + COL_USER_EMAIL + " = ?", new String[]{username});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
@@ -131,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE " +
-                        COL_USER_USERNAME + " = ? AND " + COL_USER_PASSWORD + " = ?",
+                        COL_USER_EMAIL + " = ? AND " + COL_USER_PASSWORD + " = ?",
                 new String[]{username, password});
 
         if (cursor.getCount() > 0) {
@@ -387,7 +391,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public String getUserName(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "SELECT " + COL_USER_USERNAME + " FROM " + TABLE_USERS + " WHERE " + COL_USER_ID + " = ?",
+                "SELECT " + COL_USER_FULLNAME + " FROM " + TABLE_USERS + " WHERE " + COL_USER_ID + " = ?",
                 new String[]{String.valueOf(userId)}
         );
         String username = "";
@@ -503,5 +507,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " GROUP BY " + COL_EXPENSE_CATEGORY;
 
         return db.rawQuery(query, new String[]{String.valueOf(userId), currentMonth});
+    }
+    // --- Functions for Profile Management ---
+
+    /**
+     * Get user details by ID
+     */
+    public Cursor getUserDetails(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // We only select Fullname and Email (and Password if needed to pre-fill, though usually we don't)
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COL_USER_ID + " = ?";
+        return db.rawQuery(query, new String[]{String.valueOf(userId)});
+    }
+
+    /**
+     * Update User Profile (Name and Password only)
+     */
+    public boolean updateUserProfile(int userId, String newName, String newPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_USER_FULLNAME, newName);
+        cv.put(COL_USER_PASSWORD, newPassword);
+
+        // We DO NOT update the email, effectively locking it
+        int result = db.update(TABLE_USERS, cv, COL_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return result > 0;
+    }
+
+    /**
+     * Delete User Account (and all associated data)
+     */
+    public boolean deleteAccount(int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Delete all foreign key constraints first to maintain DB integrity
+        db.delete(TABLE_EXPENSES, COL_EXPENSE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        db.delete(TABLE_BUDGETS, COL_BUDGET_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        db.delete(TABLE_NOTES, COL_NOTE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
+        // Finally delete the user
+        int result = db.delete(TABLE_USERS, COL_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+        return result > 0;
     }
 }

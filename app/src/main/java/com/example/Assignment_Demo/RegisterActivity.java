@@ -127,10 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
                 tilEmail.setError("This email is already registered");
                 Toast.makeText(this, "Email already exists", Toast.LENGTH_SHORT).show();
             } else {
-                // Note: The original DatabaseHelper.registerUser likely only takes username and password.
-                // If you intend to store name, you would need to modify DatabaseHelper.
-                // Mobile number is now fully removed from the registration flow.
-                boolean isRegistered = dbHelper.registerUser(email, password); // Using email as username for registration
+                boolean isRegistered = dbHelper.registerUser(name, email, password); // Using email as username for registration
                 if (isRegistered) {
                     Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);

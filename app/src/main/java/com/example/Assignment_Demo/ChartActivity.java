@@ -169,7 +169,7 @@ public class ChartActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LayerActivity.class);
                 intent.putExtra("USER_ID", currentUserId);
                 startActivity(intent);
-            } else if (itemId == R.id.nav_user) {
+            } else if (itemId == R.id.nav_setting) {
                 // Logic user
             }
             return true;

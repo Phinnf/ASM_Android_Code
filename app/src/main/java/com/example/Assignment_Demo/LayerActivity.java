@@ -11,9 +11,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LayerActivity extends AppCompatActivity {
 
     private MaterialCardView cardNote;
@@ -88,7 +85,7 @@ public class LayerActivity extends AppCompatActivity {
                 intent.putExtra("USER_ID", currentUserId);
                 startActivity(intent);
                 return true;
-            } else if (itemId == R.id.nav_user) {
+            } else if (itemId == R.id.nav_setting) {
                 // TODO: Logic user
             }
 

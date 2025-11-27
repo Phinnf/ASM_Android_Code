@@ -131,8 +131,9 @@ public class DashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LayerActivity.class)
                         .putExtra("USER_ID", currentUserId));
                 return true;
-            } else if (id == R.id.nav_user) {
-                return true;
+            } else if (id == R.id.nav_setting) {
+                startActivity(new Intent(this, SettingsActivity.class)
+                        .putExtra("USER_ID", currentUserId));
             }
             return false;
         });

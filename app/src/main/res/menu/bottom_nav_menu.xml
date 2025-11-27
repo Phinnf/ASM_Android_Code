@@ -21,7 +21,7 @@
         android:title="Layers" />
 
     <item
-        android:id="@+id/nav_user"
-        android:icon="@drawable/ic_user_box_light"
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/ic_setting"
         android:title="User" />
 </menu>
