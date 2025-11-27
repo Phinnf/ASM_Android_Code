@@ -31,7 +31,7 @@
         <activity android:name=".LayerActivity" />
         <activity android:name=".NoteActivity" />
         <activity android:name=".CategoryAnalyticsActivity" />
-
+        <activity android:name=".SpendingAnalysisActivity" />
         <activity
             android:name=".ChartActivity"
             android:exported="false" />

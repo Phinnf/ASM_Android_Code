@@ -18,8 +18,10 @@ public class LayerActivity extends AppCompatActivity {
 
     private MaterialCardView cardNote;
     private MaterialCardView cardTrack;
+    private MaterialCardView cardSpendingHealth;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton fabAddExpense;
+
     private int currentUserId;
     private RecyclerView tasksRecyclerView;
 
@@ -37,6 +39,7 @@ public class LayerActivity extends AppCompatActivity {
 
         cardNote = findViewById(R.id.cardNote);
         cardTrack = findViewById(R.id.cardTrack);
+        cardSpendingHealth = findViewById(R.id.cardSpendingHealth);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fabAddExpense = findViewById(R.id.fabAddExpense);
 
@@ -56,6 +59,11 @@ public class LayerActivity extends AppCompatActivity {
         });
         cardTrack.setOnClickListener(v -> {
             Intent intent = new Intent(LayerActivity.this, CategoryAnalyticsActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
+        cardSpendingHealth.setOnClickListener(v -> {
+            Intent intent = new Intent(LayerActivity.this, SpendingAnalysisActivity.class);
             intent.putExtra("USER_ID", currentUserId);
             startActivity(intent);
         });
