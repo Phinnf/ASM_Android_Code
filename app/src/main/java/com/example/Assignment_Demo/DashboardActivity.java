@@ -46,7 +46,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = DatabaseHelper.getInstance(this);
 
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
         if (currentUserId == -1) {
@@ -66,12 +66,12 @@ public class DashboardActivity extends AppCompatActivity {
         rvExpenses = findViewById(R.id.rvExpenses);
         fabAddExpense = findViewById(R.id.fabAddExpense);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         summaryInclude = findViewById(R.id.includeSummary);
 
+        // Lưu ý: Đảm bảo getUserName trong DatabaseHelper cũng đóng Cursor nhé!
         String username = dbHelper.getUserName(currentUserId);
-        tvHello.setText("Hello, " + username);
+        tvHello.setText("Hello, " + (username != null ? username : "User"));
 
         chartExpense = findViewById(R.id.chartExpense);
 
@@ -79,6 +79,9 @@ public class DashboardActivity extends AppCompatActivity {
         tabWeekly = findViewById(R.id.tab_weekly);
         tabMonthly = findViewById(R.id.tab_monthly);
         tabYear = findViewById(R.id.tab_year);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        MenuNavigation.setupBottomNavigation(bottomNavigationView, this, currentUserId, R.id.nav_home);
     }
 
     private void setupTabListeners() {
@@ -111,36 +114,23 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setupOtherListeners() {
-        fabAddExpense.setOnClickListener(v ->
-                startActivity(new Intent(this, AddExpenseActivity.class))
-        );
+        // --- FIX: Truyền USER_ID khi chuyển trang ---
+        fabAddExpense.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddExpenseActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
 
-        btnGoToBudget.setOnClickListener(v ->
-                startActivity(new Intent(this, BudgetActivity.class))
-        );
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_home) {
-                return true;
-            } else if (id == R.id.nav_chart) {
-                startActivity(new Intent(this, ChartActivity.class)
-                        .putExtra("USER_ID", currentUserId));
-                return true;
-            } else if (id == R.id.nav_layers) {
-                startActivity(new Intent(this, LayerActivity.class)
-                        .putExtra("USER_ID", currentUserId));
-                return true;
-            } else if (id == R.id.nav_setting) {
-                startActivity(new Intent(this, SettingsActivity.class)
-                        .putExtra("USER_ID", currentUserId));
-            }
-            return false;
+        btnGoToBudget.setOnClickListener(v -> {
+            Intent intent = new Intent(this, BudgetActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
         });
     }
 
     private void setupRecyclerView() {
         rvExpenses.setLayoutManager(new LinearLayoutManager(this));
+        // Khởi tạo adapter với null cursor trước
         expenseAdapter = new ExpenseAdapter(this, null);
         rvExpenses.setAdapter(expenseAdapter);
     }
@@ -148,28 +138,34 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        }
         loadDashboardSummary();
         loadExpenseList();
     }
 
     private void loadDashboardSummary() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.US);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.US);
 
-        TextView tvCurrentMonth = summaryInclude.findViewById(R.id.tvCurrentMonth);
-        tvCurrentMonth.setText(sdf.format(calendar.getTime()));
+            TextView tvCurrentMonth = summaryInclude.findViewById(R.id.tvCurrentMonth);
+            tvCurrentMonth.setText(sdf.format(calendar.getTime()));
 
-        double totalSpending = dbHelper.getTotalSpendingForCurrentMonth(currentUserId);
-        double totalBudget = dbHelper.getTotalBudget(currentUserId);
+            double totalSpending = dbHelper.getTotalSpendingForCurrentMonth(currentUserId);
+            double totalBudget = dbHelper.getTotalBudget(currentUserId);
 
-        SummaryHelper.updateSummary(summaryInclude, totalBudget, totalSpending, this);
+            SummaryHelper.updateSummary(summaryInclude, totalBudget, totalSpending, this);
 
-        // Load chart with selected tab
-        ChartHelper.loadChart(this, chartExpense, selectedTab, currentUserId, dbHelper);
+            // Load chart with selected tab
+            ChartHelper.loadChart(this, chartExpense, selectedTab, currentUserId, dbHelper);
 
-        // Update initial tab UI
-        updateTabUI(selectedTab);
+            // Update initial tab UI
+            updateTabUI(selectedTab);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log lỗi nếu tính toán summary bị crash
+        }
     }
 
     private void updateTabUI(String tab) {
@@ -199,13 +195,18 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void loadExpenseList() {
+        // Lấy cursor mới
         Cursor newCursor = dbHelper.getExpenses(currentUserId);
+
+        // SwapCursor sẽ tự động đóng Cursor CŨ nếu Adapter được viết chuẩn
+        // CursorAdapter quản lý việc này, nhưng Activity vẫn chịu trách nhiệm lifecycle
         expenseAdapter.swapCursor(newCursor);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Đóng cursor khi thoát app để tránh leak
         if (expenseAdapter != null) {
             expenseAdapter.swapCursor(null);
         }

@@ -1,14 +1,11 @@
 package com.example.Assignment_Demo;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,7 +18,8 @@ import com.google.android.material.textfield.TextInputEditText;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etName, etPassword;
-    private Button btnUpdate,  btnDelete;
+    private Button btnUpdate, btnDelete;
+    private View btnBack; // Thêm biến cho nút Back
 
     private SwitchMaterial switchDarkMode;
     private DatabaseHelper dbHelper;
@@ -31,20 +29,27 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.edit_profile);
 
-        // 1. Initialize DB and Views
-        dbHelper = new DatabaseHelper(this);
+        // --- FIX 1: Dùng Singleton để tránh Leak Database ---
+        dbHelper = DatabaseHelper.getInstance(this);
+
+        // Init Views
         etEmail = findViewById(R.id.etProfileEmail);
         etName = findViewById(R.id.etProfileName);
         etPassword = findViewById(R.id.etProfilePassword);
         btnUpdate = findViewById(R.id.btnUpdateProfile);
         btnDelete = findViewById(R.id.btnDeleteAccount);
         switchDarkMode = findViewById(R.id.switchDarkMode);
+        btnBack = findViewById(R.id.btn_back);
 
-        // 2. Get User ID from SharedPreferences (Assuming you saved it during Login)
         sharedPreferences = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
-        currentUserId = sharedPreferences.getInt("USER_ID", -1);
+
+        // --- FIX 2: Ưu tiên lấy ID từ Intent (do Settings gửi sang), nếu không có mới lấy SharedPrefs ---
+        currentUserId = getIntent().getIntExtra("USER_ID", -1);
+        if (currentUserId == -1) {
+            currentUserId = sharedPreferences.getInt("USER_ID", -1);
+        }
 
         // Handle Dark Mode State
         boolean isDarkMode = sharedPreferences.getBoolean("DARK_MODE", false);
@@ -52,11 +57,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (currentUserId == -1) {
             Toast.makeText(this, "Error: User not logged in", Toast.LENGTH_SHORT).show();
-            finish(); // Close activity
+            finish();
             return;
         }
 
-        // 3. Load User Data
+        // 3. Load User Data (Safe Mode)
         loadUserData();
 
         // 4. Update Profile Button Logic
@@ -89,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
             editor.apply();
         });
 
-        // 6. Delete Account Logic (with confirmation)
+        // 6. Delete Account Logic
         btnDelete.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setTitle("Delete Account")
@@ -98,9 +103,11 @@ public class ProfileActivity extends AppCompatActivity {
                         boolean deleted = dbHelper.deleteAccount(currentUserId);
                         if (deleted) {
                             Toast.makeText(this, "Account Deleted", Toast.LENGTH_SHORT).show();
-                            // Clear session and close
                             sharedPreferences.edit().clear().apply();
-                            finish();
+
+                            // Chuyển về màn hình Login và xóa hết Activity cũ
+                            // (Tránh trường hợp user bấm Back lại vào được màn hình cũ)
+                            finishAffinity();
                         } else {
                             Toast.makeText(this, "Error Deleting Account", Toast.LENGTH_SHORT).show();
                         }
@@ -108,21 +115,40 @@ public class ProfileActivity extends AppCompatActivity {
                     .setNegativeButton("Cancel", null)
                     .show();
         });
-        View btnBack = findViewById(R.id.btn_back);
+
+        // Back Button
         btnBack.setOnClickListener(v -> finish());
     }
 
+    // --- FIX 3: Cursor Management An Toàn (Chống Crash) ---
     private void loadUserData() {
-        Cursor cursor = dbHelper.getUserDetails(currentUserId);
-        if (cursor.moveToFirst()) {
-            String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_EMAIL));
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_FULLNAME));
-            String pass = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_USER_PASSWORD));
+        Cursor cursor = null;
+        try {
+            cursor = dbHelper.getUserDetails(currentUserId);
 
-            etEmail.setText(email); // Disabled in XML, so read-only
-            etName.setText(name);
-            etPassword.setText(pass);
+            if (cursor != null && cursor.moveToFirst()) {
+                // Lấy index an toàn (tránh lỗi cột không tồn tại)
+                int emailIdx = cursor.getColumnIndex(DatabaseHelper.COL_USER_EMAIL);
+                int nameIdx = cursor.getColumnIndex(DatabaseHelper.COL_USER_FULLNAME);
+                int passIdx = cursor.getColumnIndex(DatabaseHelper.COL_USER_PASSWORD);
+
+                if (emailIdx != -1 && nameIdx != -1 && passIdx != -1) {
+                    String email = cursor.getString(emailIdx);
+                    String name = cursor.getString(nameIdx);
+                    String pass = cursor.getString(passIdx);
+
+                    etEmail.setText(email);
+                    etName.setText(name);
+                    etPassword.setText(pass);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi tải thông tin user", Toast.LENGTH_SHORT).show();
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
         }
-        cursor.close();
     }
 }

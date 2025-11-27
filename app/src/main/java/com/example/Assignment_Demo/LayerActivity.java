@@ -37,7 +37,6 @@ public class LayerActivity extends AppCompatActivity {
         cardNote = findViewById(R.id.cardNote);
         cardTrack = findViewById(R.id.cardTrack);
         cardSpendingHealth = findViewById(R.id.cardSpendingHealth);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
         fabAddExpense = findViewById(R.id.fabAddExpense);
 
         cardNote.setOnClickListener(v -> {
@@ -71,28 +70,7 @@ public class LayerActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                Intent intent = new Intent(LayerActivity.this, DashboardActivity.class);
-                intent.putExtra("USER_ID", currentUserId);
-                startActivity(intent);
-                finish(); // Finish current activity to prevent back stack issues
-                return true;
-            } else if (itemId == R.id.nav_chart) {
-                Intent intent = new Intent(LayerActivity.this, ChartActivity.class);
-                intent.putExtra("USER_ID", currentUserId);
-                startActivity(intent);
-                return true;
-            } else if (itemId == R.id.nav_setting) {
-                // TODO: Logic user
-            }
-
-            return true;
-        });
-
-        // Set the current item in the bottom navigation to 'layers' when this activity is created
-        bottomNavigationView.setSelectedItemId(R.id.nav_layers);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        MenuNavigation.setupBottomNavigation(bottomNavigationView, this, currentUserId, R.id.nav_layers);
     }
 }

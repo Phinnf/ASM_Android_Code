@@ -45,6 +45,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_NOTE_IS_COMPLETE = "IS_COMPLETE"; // 0 for false, 1 for true
     public static final String COL_NOTE_DATE = "DATE";
 
+//    ------------------------------------------
+
+    private static DatabaseHelper instance;
+    // Hàm này đảm bảo chỉ có 1 instance duy nhất được tạo ra
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            // Dùng context.getApplicationContext() để tránh rò rỉ Activity context
+            instance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+//    ------------------------------------------
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

@@ -43,7 +43,8 @@ public class ChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analysis);
 
-        dbHelper = new DatabaseHelper(this);
+        dbHelper = DatabaseHelper.getInstance(this);
+
         currentUserId = getIntent().getIntExtra("USER_ID", -1);
 
         initViews();
@@ -66,7 +67,6 @@ public class ChartActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btn_back);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
-//        btnNotify = findViewById(R.id.btn_notify);
         chartExpense = findViewById(R.id.chart_expense);
 
         tabDaily = findViewById(R.id.tab_daily);
@@ -156,25 +156,6 @@ public class ChartActivity extends AppCompatActivity {
         );
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                Intent intent = new Intent(this, DashboardActivity.class);
-                intent.putExtra("USER_ID", currentUserId);
-                startActivity(intent);
-                finish();
-            } else if (itemId == R.id.nav_layers) {
-                Intent intent = new Intent(this, LayerActivity.class);
-                intent.putExtra("USER_ID", currentUserId);
-                startActivity(intent);
-            } else if (itemId == R.id.nav_setting) {
-                // Logic user
-            }
-            return true;
-        });
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_chart);
+        MenuNavigation.setupBottomNavigation(bottomNavigationView, this, currentUserId, R.id.nav_chart);
     }
 }
