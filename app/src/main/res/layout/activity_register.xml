@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Expense Manager"
-            android:textColor="@color/white"
+            android:textColor="@color/textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -50,6 +50,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:padding="24dp">
 
             <!-- Sign In / Sign Up Toggle -->
@@ -58,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/tab_background"
+                android:background="@color/light_background"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -69,8 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Sign In"
-                    android:textColor="@color/colorPrimary"
-                    android:backgroundTint="@android:color/transparent"
+                    android:textColor="@color/textColorPrimary"
+                    android:backgroundTint="@color/white"
                     app:strokeColor="@color/colorPrimary"
                     app:strokeWidth="1dp"
                     app:cornerRadius="12dp"
@@ -87,8 +88,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Sign Up"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/textColorPrimary"
+                    android:backgroundTint="@color/white"
                     app:cornerRadius="12dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
@@ -195,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Sign Up"
-                android:textColor="@color/white"
+                android:textColor="@color/textColorPrimary"
                 android:backgroundTint="@color/colorPrimary"
                 android:paddingVertical="12dp"
                 app:cornerRadius="16dp"

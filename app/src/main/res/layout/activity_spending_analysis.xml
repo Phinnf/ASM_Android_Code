@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:text="Monthly Grade"
                         android:textAllCaps="true"
-                        android:textColor="#888888"
+                        android:textColor="@color/textColorPrimary"
                         android:letterSpacing="0.1"
                         android:textStyle="bold"/>
 
@@ -108,7 +108,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Spent"
-                                android:textColor="#888888"/>
+                                android:textColor="@color/textColorPrimary"/>
                             <TextView
                                 android:id="@+id/tvTotalSpent"
                                 android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Budget"
-                                android:textColor="#888888"/>
+                                android:textColor="@color/textColorPrimary"/>
                             <TextView
                                 android:id="@+id/tvTotalBudget"
                                 android:layout_width="wrap_content"
@@ -162,7 +162,7 @@
                 android:text="Loading analysis..."
                 android:lineSpacingExtra="4dp"
                 android:textSize="16sp"
-                android:textColor="@color/textColorSecondary"/>
+                android:textColor="@color/textColorPrimary"/>
 
         </LinearLayout>
     </ScrollView>

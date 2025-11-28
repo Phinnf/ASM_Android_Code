@@ -8,8 +8,8 @@
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@android:color/white"
-    app:strokeColor="#E0E0E0"
+    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/textColorPrimary"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_height="40dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#E8F5E9"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginEnd="12dp">
 
                 <ImageView
@@ -38,7 +38,7 @@
                     android:layout_height="match_parent"
                     android:padding="8dp"
                     android:src="@drawable/ic_food"
-                    app:tint="#2E7D32"/>
+                    app:tint="@color/colorPrimaryDark"/>
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -49,7 +49,7 @@
                 tools:text="Food &amp; Dining"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/textColorPrimary"/>
 
             <TextView
                 android:id="@+id/tvCategoryStats"
@@ -58,7 +58,7 @@
                 tools:text="$150 / $300"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="#666666"/>
+                android:textColor="@color/textColorPrimary"/>
         </LinearLayout>
 
         <ProgressBar
@@ -70,7 +70,7 @@
             android:max="100"
             android:progress="50"
             android:progressDrawable="@drawable/progress_custom"
-            android:progressTint="#2E7D32"
+            android:progressTint="@color/colorPrimaryDark"
             tools:progress="50"/>
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="⚠ Over Budget!"
-            android:textColor="#D32F2F"
+            android:textColor="@color/deleteButtonColor"
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"

@@ -18,4 +18,5 @@
     <color name="divider">#2C2C2C</color>
     <color name="white">#232533</color>
     <color name="black">#FF000000</color>
+    <color name="deleteButtonColor">#D32F2F</color>
 </resources>

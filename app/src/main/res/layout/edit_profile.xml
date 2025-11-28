@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/backgroundLight"
     android:padding="16dp"
-    android:backgroundTint="@color/white"
+    android:backgroundTint="@color/backgroundLight"
     >
 
     <LinearLayout
@@ -36,12 +36,14 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
+            android:textColor="@color/textColorPrimary"
             android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/white"
                 android:padding="16dp">
 
                 <TextView
@@ -63,6 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
+                        android:textColor="@color/textColorPrimary"
                         android:inputType="textEmailAddress"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,6 +80,7 @@
                         android:id="@+id/etProfileName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/textColorPrimary"
                         android:inputType="textPersonName"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,6 +96,7 @@
                         android:id="@+id/etProfilePassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/textColorPrimary"
                         android:inputType="textPassword"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Update Information"
+                    android:textColor="@color/textColorPrimary"
                     android:layout_marginTop="16dp"/>
 
             </LinearLayout>
@@ -116,6 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/white"
                 android:padding="16dp">
 
                 <TextView
@@ -143,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Delete Account"
-            android:textColor="@color/white"
+            android:textColor="@color/textColorPrimary"
             android:backgroundTint="@color/deleteButtonColor"/>
 
     </LinearLayout>

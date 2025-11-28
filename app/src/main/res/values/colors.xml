@@ -5,7 +5,7 @@
     <color name="colorOnPrimary">#000000</color>
     <color name="textColorPrimary">#36454F</color>
     <color name="textColorSecondary">#1E272C</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="black">#FF000000</color>
 
     <color name="backgroundLight">#F5F5F5</color>
