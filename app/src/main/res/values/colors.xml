@@ -2,15 +2,15 @@
 <resources>
     <color name="colorPrimary">#3DDC84</color>
     <color name="colorPrimaryDark">#00A36C</color>
+    <color name="colorOnPrimary">#000000</color>
     <color name="textColorPrimary">#36454F</color>
     <color name="textColorSecondary">#1E272C</color>
-    <color name="backgroundLight">#F5F5F5</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 
+    <color name="backgroundLight">#F5F5F5</color>
     <color name="green_light">#7CFCB1</color>
     <color name="grey_hint">#888888</color>
-
     <color name="primary_green">#00B07B</color>
     <color name="primary_dark">#0EA77A</color>
     <color name="white_80">#CCFFFFFF</color>
@@ -18,4 +18,6 @@
     <color name="gray_text">#9AA4A3</color>
     <color name="light_background">#F6FBFA</color>
     <color name="divider">#E6E6E6</color>
+    <color name="deleteButtonColor">#D32F2F</color>
+    <color name="header_background_setting">#00D09E</color>
 </resources>

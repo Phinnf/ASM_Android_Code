@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -45,29 +46,17 @@
                 android:text="Analysis"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-<!--            <ImageView-->
-<!--                android:id="@+id/btn_notify"-->
-<!--                android:layout_width="36dp"-->
-<!--                android:layout_height="36dp"-->
-<!--                android:padding="8dp"-->
-<!--                android:src="@drawable/ic_notifications"-->
-<!--                android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </LinearLayout>
 
-    <!-- White rounded content container overlapping header -->
+    <!-- Content container -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
@@ -78,272 +67,275 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
 
-            <LinearLayout
-                android:id="@+id/main_content"
+        <LinearLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- Balances Summary Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                app:cardUseCompatPadding="false">
 
-                <!-- Balances -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.None"
-                    app:cardUseCompatPadding="false"
-
-                    >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <include
-                            android:id="@+id/includeSummary"
-                            layout="@layout/layout_summary"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Tabs (Daily / Weekly / Monthly / Year) -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/tab_background"
-                    android:orientation="horizontal"
-                    android:padding="4dp">
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tab_daily"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/tab_selected"
-                        android:gravity="center"
-                        android:padding="6dp"
-                        android:text="Daily"
-                        android:textColor="@color/primary_dark"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tab_weekly"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="6dp"
-                        android:text="Weekly"
-                        android:textColor="@color/gray_text"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tab_monthly"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="6dp"
-                        android:text="Monthly"
-                        android:textColor="@color/gray_text"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tab_year"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="6dp"
-                        android:text="Year"
-                        android:textColor="@color/gray_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardElevation="2dp">
-
-                    <RelativeLayout
+                    <!-- Ensure layout_summary.xml exists -->
+                    <include
+                        android:id="@+id/includeSummary"
+                        layout="@layout/layout_summary"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="12dp">
+                        android:layout_height="wrap_content" />
 
-                        <TextView
-                            android:id="@+id/tv_chart_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Income and Expenses"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <com.github.mikephil.charting.charts.BarChart
-                            android:id="@+id/chart_expense"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@id/tv_chart_title"
-                            android:layout_marginTop="8dp" />
-                    </RelativeLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Income & Expense summary row -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_income_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Income"
-                            android:textColor="@color/gray_text"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/tv_income"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="$4,120.00"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="56dp"
-                        android:background="@color/divider" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/tv_expense_label2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Expense"
-                            android:textColor="@color/gray_text"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/tv_expense2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="$1,187.40"
-                            android:textColor="@color/expense_color"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <!-- My Targets: two circular cards -->
+            <!-- Tabs -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/tab_background"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:text="My Targets"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:id="@+id/tab_daily"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/tab_selected"
+                    android:gravity="center"
+                    android:text="Daily"
+                    android:textColor="@color/primary_dark"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tab_weekly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Weekly"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tab_monthly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Monthly"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tab_year"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Year"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Chart Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_chart_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Income and Expenses"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <!-- Make sure MPAndroidChart dependency is in build.gradle -->
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/chart_expense"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/tv_chart_title"
+                        android:layout_marginTop="8dp" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Income & Expense Text Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <!-- Target 1 -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp">
+                    <TextView
+                        android:id="@+id/tv_income_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Income"
+                        android:textColor="@color/gray_text"
+                        android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:background="@drawable/tab_background">
+                    <TextView
+                        android:id="@+id/tv_income"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="$4,120.00"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                            <com.google.android.material.progressindicator.CircularProgressIndicator
-                                android:id="@+id/progress_travel"
-                                style="@style/Base.Theme.Lab_Demo_Test"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:indeterminate="false"
-                                android:progress="30"
-                                app:trackThickness="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Travel" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <!-- Target 2 -->
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:background="@drawable/tab_background">
-
-                            <com.google.android.material.progressindicator.CircularProgressIndicator
-                                android:id="@+id/progress_car"
-                                style="@style/Base.Theme.Lab_Demo_Test"
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:indeterminate="false"
-                                android:progress="50"
-                                app:trackThickness="8dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Car" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp" />
+                    android:layout_width="1dp"
+                    android:layout_height="56dp"
+                    android:background="@color/divider" />
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_expense_label2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Expense"
+                        android:textColor="@color/gray_text"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_expense2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="$1,187.40"
+                        android:textColor="@color/expense_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- My Targets -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="My Targets"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingBottom="80dp"> <!-- Added padding so content isn't hidden by FAB -->
+
+                <!-- Target 1 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+
+                        <!-- Removed incorrect 'style' attribute -->
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progress_travel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="false"
+                            android:progress="30"
+                            app:indicatorSize="72dp"
+                            app:trackThickness="8dp"
+                            app:indicatorColor="@color/primary_green" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Travel"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Target 2 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="140dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+
+                        <!-- Removed incorrect 'style' attribute -->
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progress_car"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="false"
+                            android:progress="50"
+                            app:indicatorSize="72dp"
+                            app:trackThickness="8dp"
+                            app:indicatorColor="@color/expense_color"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Car"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
@@ -351,7 +343,10 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:itemIconTint="@null"
+        android:background="@color/white"
+        app:elevation="8dp"
+        app:itemIconTint="@color/primary_green"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -366,12 +361,10 @@
         app:tint="@android:color/white"
         app:elevation="8dp"
         app:pressedTranslationZ="12dp"
-
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-
         android:layout_marginBottom="-28dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
