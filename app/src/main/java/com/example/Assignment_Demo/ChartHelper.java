@@ -92,7 +92,7 @@ public class ChartHelper {
         // ✔ Dữ liệu hợp lệ → render chart
         BarDataSet dataSet = new BarDataSet(entries, "Expenses");
         dataSet.setColor(ContextCompat.getColor(context, R.color.primary_dark));
-        dataSet.setValueTextColor(context.getResources().getColor(android.R.color.black));
+        dataSet.setValueTextColor(context.getResources().getColor(android.R.color.white));
         dataSet.setValueTextSize(10f);
 
         BarData barData = new BarData(dataSet);
@@ -104,6 +104,7 @@ public class ChartHelper {
         XAxis xAxis = chartExpense.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(ContextCompat.getColor(context, R.color.textColorPrimary));
         xAxis.setGranularity(1f);
         xAxis.setDrawGridLines(false);
 
@@ -111,6 +112,8 @@ public class ChartHelper {
         chartExpense.getAxisRight().setEnabled(false);
         chartExpense.getLegend().setEnabled(false);
         chartExpense.getDescription().setEnabled(false);
+        chartExpense.getAxisLeft().setTextColor(ContextCompat.getColor(context, R.color.textColorPrimary));
+
 
         chartExpense.animateY(1000);
         chartExpense.invalidate();
