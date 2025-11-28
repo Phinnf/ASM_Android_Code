@@ -132,7 +132,7 @@ public class ChartActivity extends AppCompatActivity {
 
     private void resetTabStyle(TextView tab) {
         tab.setBackgroundResource(0);
-        tab.setTextColor(ContextCompat.getColor(this, R.color.textColorPrimary));
+        tab.setTextColor(ContextCompat.getColor(this, R.color.gray_text));
     }
 
     private void setupChart() {

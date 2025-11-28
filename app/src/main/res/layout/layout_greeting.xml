@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:text="Hello, User"
         android:textSize="18sp"
-        android:textColor="#757575" />
+        android:textColor="@color/textColorPrimary" />
 
     <ImageView
         android:id="@+id/imgAvatar"
