@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background">
+    android:background="@color/backgroundLight">
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
                     android:text="New Expense"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textColorPrimary"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -92,12 +92,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Select Date (Today)"
+                android:textColor="@color/textColorPrimary"
                 android:layout_marginBottom="24dp"/>
 
             <Button
                 android:id="@+id/btnSaveExpense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/textColorPrimary"
                 android:text="Save Expense"/>
 
         </LinearLayout>

@@ -74,7 +74,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
         // Bind data to ViewHolder
         holder.descriptionText.setText(description);
-        holder.amountText.setText(String.format(Locale.US, "%.0f$", amount));
+        holder.amountText.setText(String.format(Locale.US, "-%.0f$", amount));
         holder.categoryText.setText("Category: " + category);
         holder.dateText.setText(date);
 
