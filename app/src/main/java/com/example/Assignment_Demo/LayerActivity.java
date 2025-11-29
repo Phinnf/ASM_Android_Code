@@ -16,6 +16,8 @@ public class LayerActivity extends AppCompatActivity {
     private MaterialCardView cardNote;
     private MaterialCardView cardTrack;
     private MaterialCardView cardSpendingHealth;
+    private MaterialCardView cardCalculator;
+    private MaterialCardView cardHistory;
     private BottomNavigationView bottomNavigationView;
     private FloatingActionButton fabAddExpense;
 
@@ -37,6 +39,9 @@ public class LayerActivity extends AppCompatActivity {
         cardNote = findViewById(R.id.cardNote);
         cardTrack = findViewById(R.id.cardTrack);
         cardSpendingHealth = findViewById(R.id.cardSpendingHealth);
+        cardCalculator = findViewById(R.id.cardCalculator);
+        cardHistory = findViewById(R.id.cardHistory);
+
         fabAddExpense = findViewById(R.id.fabAddExpense);
 
         cardNote.setOnClickListener(v -> {
@@ -60,6 +65,18 @@ public class LayerActivity extends AppCompatActivity {
         });
         cardSpendingHealth.setOnClickListener(v -> {
             Intent intent = new Intent(LayerActivity.this, SpendingAnalysisActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
+        cardCalculator.setOnClickListener(v -> {
+            Intent intent = new Intent(LayerActivity.this, CalculatorActivity.class);
+            // We pass the user ID just in case you want to save calculations to the DB later
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
+        cardHistory.setOnClickListener(v -> {
+            // Create this Activity if you haven't yet
+            Intent intent = new Intent(LayerActivity.this, HistoryActivity.class);
             intent.putExtra("USER_ID", currentUserId);
             startActivity(intent);
         });

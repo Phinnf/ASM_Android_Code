@@ -27,7 +27,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="Go Back"
-            app:tint="@android:color/white" />
+            app:tint="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"

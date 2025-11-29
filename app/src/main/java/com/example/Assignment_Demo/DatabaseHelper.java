@@ -189,9 +189,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Cursor getExpenses(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
+        // Modified query: Order by Date DESC, then by ID DESC (newest created)
         String query = "SELECT * FROM " + TABLE_EXPENSES +
                 " WHERE " + COL_EXPENSE_USER_ID + " = ? " +
-                " ORDER BY " + COL_EXPENSE_DATE + " DESC";
+                " ORDER BY " + COL_EXPENSE_DATE + " DESC, " + COL_EXPENSE_ID + " DESC";
         return db.rawQuery(query, new String[]{String.valueOf(userId)});
     }
 
