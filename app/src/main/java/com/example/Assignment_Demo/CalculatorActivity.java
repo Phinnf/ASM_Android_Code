@@ -90,6 +90,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         // Update the top text view
         tvSolution.setText(dataToCalculate);
 
+        if (dataToCalculate.isEmpty()) {
+            tvResult.setText("0");
+            return;
+        }
         // calculate immediately (if possible)
         String finalResult = calculateResult(dataToCalculate);
 
