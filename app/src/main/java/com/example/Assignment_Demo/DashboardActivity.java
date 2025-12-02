@@ -27,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
     private ExpenseAdapter expenseAdapter;
 
-    private TextView tvHello;
+    private TextView tvHello, tvSeeAll;
     private TextView tabDaily, tabWeekly, tabMonthly, tabYear;
     private RecyclerView rvExpenses;
     private FloatingActionButton fabAddExpense;
@@ -66,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
         rvExpenses = findViewById(R.id.rvExpenses);
         fabAddExpense = findViewById(R.id.fabAddExpense);
         btnGoToBudget = findViewById(R.id.btnGoToBudget);
+        tvSeeAll = findViewById(R.id.tvSeeAll);
 
         summaryInclude = findViewById(R.id.includeSummary);
 
@@ -123,6 +124,11 @@ public class DashboardActivity extends AppCompatActivity {
 
         btnGoToBudget.setOnClickListener(v -> {
             Intent intent = new Intent(this, BudgetActivity.class);
+            intent.putExtra("USER_ID", currentUserId);
+            startActivity(intent);
+        });
+        tvSeeAll.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HistoryActivity.class);
             intent.putExtra("USER_ID", currentUserId);
             startActivity(intent);
         });
