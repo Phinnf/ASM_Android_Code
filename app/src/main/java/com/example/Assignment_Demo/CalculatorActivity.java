@@ -111,7 +111,10 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             // 2. Initialize the script
             Scriptable scriptable = context.initStandardObjects();
 
-            // 3. Evaluate the string (Example: "2+2")
+            // 3. Evaluate the string
+            // (Since JavaScript knows how to do math, when it runs "5+10", it returns the number 15.
+            // If you passed "10/2", JavaScript returns 5.
+            // It even handles order of operations automatically (e.g., "2+2*2" becomes 6, not 8))
             String finalResult = context.evaluateString(scriptable, data, "Javascript", 1, null).toString();
 
             // 4. Remove ".0" if it's a whole number (e.g., "5.0" -> "5")

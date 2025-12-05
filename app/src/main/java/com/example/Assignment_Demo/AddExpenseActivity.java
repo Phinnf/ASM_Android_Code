@@ -51,8 +51,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
 
 
-        // Setup Category Spinner
-        // You should define this list in res/values/strings.xml
+        // Setup Category For Expense Spinner
         String[] categories = {"Food", "Transportation", "Rent", "Education", "Entertainment", "Other"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, categories);
