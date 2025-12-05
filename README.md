@@ -51,12 +51,12 @@ Beyond finance, the app serves as a "Student Productivity Hub" by integrating a 
 
 | **Login & Auth** | **Dashboard** | **Expense Tracking** |
 |:---:|:---:|:---:|
-| <img src="screenshots/login.png" width="200"> | <img src="screenshots/dashboard.png" width="200"> | <img src="screenshots/add_expense.png" width="200"> |
+| <img src="screenshots/login.png" width="200"> | <img src="drawable/dashboard.png" width="200"> | <img src="drawable/add_expense.png" width="200"> |
 | *Secure Login* | *Financial Overview* | *Add Transactions* |
 
 | **Analytics** | **Notes** | **Settings** |
 |:---:|:---:|:---:|
-| <img src="screenshots/analytics.png" width="200"> | <img src="screenshots/notes.png" width="200"> | <img src="screenshots/settings.png" width="200"> |
+| <img src="drawable/analytics.png" width="200"> | <img src="drawable/notes.png" width="200"> | <img src="drawable/settings.png" width="200"> |
 | *Budget Health* | *Task Manager* | *Dark Mode & Profile* |
 
 > *Note: Replace the image paths above with your actual screenshot files.*
@@ -107,7 +107,6 @@ The project follows a **MVC (Model-View-Controller)** pattern:
 
 ## 👥 Contributors
 * **Student Name: Phu Tuong Long, Ho Duc Duong
-* **ID:** [Your ID]
 * **Tutor:** Do Trung Anh
 ---
 *This project is submitted as part of the BTEC Level 5 Higher National Diploma in Computing.*
