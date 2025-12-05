@@ -6,7 +6,9 @@
 ![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
 
 > A comprehensive personal finance and productivity application designed for students.
+
 ---
+
 ## 📖 Table of Contents
 - [About the Project](#-about-the-project)
 - [Key Features](#-key-features)
@@ -51,15 +53,15 @@ Beyond finance, the app serves as a "Student Productivity Hub" by integrating a 
 
 | **Login & Auth** | **Dashboard** | **Expense Tracking** |
 |:---:|:---:|:---:|
-| <img src="screenshots/login.png" width="200"> | <img src="drawable/dashboard.png" width="200"> | <img src="drawable/add_expense.png" width="200"> |
+| <img src="app/src/main/res/drawable/login.png" width="200"> | <img src="app/src/main/res/drawable/dashboard.png" width="200"> | <img src="app/src/main/res/drawable/add_expense.png" width="200"> |
 | *Secure Login* | *Financial Overview* | *Add Transactions* |
 
 | **Analytics** | **Notes** | **Settings** |
 |:---:|:---:|:---:|
-| <img src="drawable/analytics.png" width="200"> | <img src="drawable/notes.png" width="200"> | <img src="drawable/settings.png" width="200"> |
+| <img src="app/src/main/res/drawable/analytics.png" width="200"> | <img src="app/src/main/res/drawable/notes.png" width="200"> | <img src="app/src/main/res/drawable/settings.png" width="200"> |
 | *Budget Health* | *Task Manager* | *Dark Mode & Profile* |
 
-> *Note: Replace the image paths above with your actual screenshot files.*
+> *Note: These screenshots are located in the app resources.*
 
 ---
 
@@ -101,12 +103,4 @@ The project follows a **MVC (Model-View-Controller)** pattern:
 3.  **Sync Gradle:**
     * Allow Android Studio to download dependencies (MPAndroidChart, etc.).
 4.  **Run the App:**
-    * Connect an Android device or use the Emulator (API Level 24+ recommended).
-
----
-
-## 👥 Contributors
-* **Student Name: Phu Tuong Long, Ho Duc Duong
-* **Tutor:** Do Trung Anh
----
-*This project is submitted as part of the BTEC Level 5 Higher National Diploma in Computing.*
+    * Connect an Android device or use the Emulator
