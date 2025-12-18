@@ -100,7 +100,7 @@ public class ChartHelper {
 
         chartExpense.setData(barData);
 
-        // Cài đặt trục X
+
         XAxis xAxis = chartExpense.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
